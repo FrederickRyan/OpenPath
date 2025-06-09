@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile | OpenPath</title>
+  <link rel="icon" type="image/png" href="assets/OP_Logo.png">
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    body {
+      margin: 0 !important;
+      padding: 0;
+      margin-top: 1rem;
+      padding-top: 4rem;
+    }
+    .profile-hero {
+      background-color: #043873;
+      color: white;
+      padding: 0 2rem 4rem 2rem;  /* no top padding */
+      position: relative;
+    }
+
+    .profile-hero .container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .profile-info {
+      flex: 1 1 300px;
+    }
+
+    .profile-info h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+
+    .profile-info h2 {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+
+    .profile-info p {
+      margin: 0.5rem 0;
+    }
+
+    .connect-btn {
+      background-color: #62aaff;
+      padding: 0.5rem 1.5rem;
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    .connect-btn:hover {
+      background-color: #1a78d2;
+    }
+
+    .edit-btn-banner {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      background-color: #fcd34d;
+      color: black;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .edit-btn-banner:hover {
+      background-color: #fbbf24;
+    }
+
+    .profile-img {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .change-photo {
+      display: none;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .editing .change-photo {
+      display: block;
+    }
+
+    .change-photo label {
+      color: #fcd34d;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .section {
+      padding: 3rem 1rem;
+    }
+
+    .section.white {
+      background: #fff;
+      color: #000;
+    }
+
+    .section.blue {
+      background: #043873;
+      color: white;
+    }
+
+    .section h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .section ul {
+      list-style-type: disc;
+      padding-left: 2rem;
+    }
+
+    .section ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+
+    .editing-indicator {
+      position: absolute;
+      top: 1rem;
+      left: 2rem;
+      background-color: #fbbf24;
+      color: black;
+      font-weight: bold;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+    }
+
+    .editable {
+      padding: 0.25rem 0.5rem;
+      border: 2px dashed transparent;
+      border-radius: 6px;
+      min-height: 1.5rem;
+    }
+
+    .editing .editable-black {
+      background-color: #111;
+      color: #fff;
+      border-color: #333;
+    }
+
+    .editing .editable-yellow {
+      background-color: #fef08a;
+      color: #000;
+      border-color: #fcd34d;
+    }
+
+    @media (max-width: 768px) {
+      .profile-hero .container { flex-direction: column; text-align: center; }
+      .profile-img { width: 200px; height: 200px; }
+      .edit-btn-banner { top: 1rem; right: 1rem; padding: 0.4rem 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo js-transition">
+        <img src="assets/OP_Logo.png" alt="OpenPath Logo" class="logo-icon">
+        OpenPath
+      </a>
+
+      <div class="burger" id="burger">
+        <span></span><span></span><span></span>
+      </div>
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html" class="js-transition">Home</a>
+        <!-- “Login” and “Try OpenPath free” will be hidden if the user is logged in -->
+        <a id="signupLink" href="signup.html" class="btn js-transition">Try OpenPath free</a>
+        <div id="profileContainer" style="display: none;"></div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="profile-hero" id="profileHero">
+    <div id="editingIndicator" class="editing-indicator" style="display: none;">Editing Mode</div>
+    <button class="edit-btn-banner" onclick="toggleEdit()">Edit Profile</button>
+    <div class="container">
+      <div class="profile-info">
+        <h1 id="name" class="editable editable-black" contenteditable="false">John Doe</h1>
+        <h2 id="title" class="editable editable-black" contenteditable="false">Current job</h2>
+        <p id="location" class="editable editable-black" contenteditable="false">Location</p>
+        <p id="phone" class="editable editable-black" contenteditable="false">Phone number</p>
+        <p id="email" class="editable editable-black" contenteditable="false">Email</p>
+        <a href="https://id.linkedin.com/" class="connect-btn">Connect</a>
+      </div>
+      <div style="text-align: center;">
+        <!-- PROFILE IMAGE -->
+        <img id="profileImg" src="assets/Default_profile.png" alt="Profile" class="profile-img" />
+        <div class="change-photo">
+          <input type="file" id="imageInput" accept="image/*" style="display: none;" />
+          <label for="imageInput">Change Picture</label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section white">
+    <div class="container">
+      <h2>Experience</h2>
+      <ul>
+        <li class="editable editable-yellow" contenteditable="false">(Experience)</li>
+        <li class="editable editable-yellow" contenteditable="false">(Experience)</li>
+        <li class="editable editable-yellow" contenteditable="false">(Experience)</li>
+        <li class="editable editable-yellow" contenteditable="false">(Experience)</li>
+      </ul>
+
+      <h2>Education</h2>
+      <p class="editable editable-yellow" contenteditable="false">
+        University: (e.g. State University)<br>
+        Bachelor: (e.g. B.S. in Computer Science)<br>
+        Date: (e.g. 2020–2024)<br>
+        GPA: (e.g. 3.8)<br>
+        Activities: (e.g. Chess Club, Volunteer)
+      </p>
+    </div>
+  </section>
+
+  <section class="section blue">
+    <div class="container">
+      <h2>Soft Skills</h2>
+      <ul>
+        <li class="editable editable-black" contenteditable="false">(e.g. Teamwork, Problem Solving)</li>
+        <li class="editable editable-black" contenteditable="false">…</li>
+        <li class="editable editable-black" contenteditable="false">…</li>
+        <li class="editable editable-black" contenteditable="false">…</li>
+      </ul>
+
+      <h2 style="margin-top: 2rem;">Technical Skills</h2>
+      <ul>
+        <li class="editable editable-black" contenteditable="false">(e.g. C++, SQL)</li>
+        <li class="editable editable-black" contenteditable="false">…</li>
+        <li class="editable editable-black" contenteditable="false">…</li>
+        <li class="editable editable-black" contenteditable="false">…</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section white">
+    <div class="container">
+      <h2>Open to</h2>
+      <ul>
+        <li class="editable editable-yellow" contenteditable="false">(e.g. Full-time, Remote, Internship)</li>
+        <li class="editable editable-yellow" contenteditable="false">…</li>
+        <li class="editable editable-yellow" contenteditable="false">…</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- NEW “Special Needs” SECTION -->
+  <section class="section white">
+    <div class="container">
+      <h2>Special Needs</h2>
+      <ul>
+        <li class="editable editable-yellow" contenteditable="false">(e.g. Mobility Assistance)</li>
+        <li class="editable editable-yellow" contenteditable="false">(e.g. Hearing Support)</li>
+        <li class="editable editable-yellow" contenteditable="false">(e.g. Visual Aid)</li>
+        <li class="editable editable-yellow" contenteditable="false">(e.g. Other)</li>
+      </ul>
+    </div>
+  </section>
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 OpenPath. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- LOGIN REQUIRED MODAL (for “Apply Now”) -->
+  <div id="loginModalOverlay" class="modal-overlay">
+    <div class="modal">
+      <h3>Login Required</h3>
+      <p>Please log in to access your profile or apply for jobs.</p>
+      <button id="closeModal" class="btn">Close</button>
+    </div>
+  </div>
+
+  <!-- MAIN SCRIPT: nav, animations, signup/login logic, profile logic, etc. -->
+  <script>
+    let isEditing = false;
+
+    function toggleEdit() {
+      isEditing = !isEditing;
+      const editableFields = document.querySelectorAll(".editable");
+      editableFields.forEach(el => el.contentEditable = isEditing);
+      document.body.classList.toggle("editing", isEditing);
+      document.getElementById("editingIndicator").style.display = isEditing ? "block" : "none";
+      document.querySelector(".edit-btn-banner").textContent = isEditing ? "Save Profile" : "Edit Profile";
+
+      if (!isEditing) {
+        // Exiting edit mode → save everything
+        saveProfileData();
+        
+      }
+    }
+
+    // When user selects a new file, load it into the <img>
+document.getElementById('imageInput').addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      alert('Please choose a valid image file.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const img = new Image();
+      img.onload = function () {
+        // ─── Decide WHEN and HOW much to downsize ─────────────────────────
+        // Only resize if both dimensions exceed 1000px.
+        // Otherwise, keep original size.
+        const MAX_DIMENSION = 1000; 
+        let width  = img.width;
+        let height = img.height;
+
+        if (width > MAX_DIMENSION && height > MAX_DIMENSION) {
+          if (width > height) {
+            height = Math.round((height * MAX_DIMENSION) / width);
+            width  = MAX_DIMENSION;
+          } else {
+            width  = Math.round((width * MAX_DIMENSION) / height);
+            height = MAX_DIMENSION;
+          }
+        } else {
+          // If at least one dimension ≤1000px, we keep the original dimensions
+          width  = img.width;
+          height = img.height;
+        }
+
+        // ─── Draw into a canvas at the chosen size ──────────────────────────
+        const canvas = document.createElement('canvas');
+        canvas.width  = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // ─── Convert the canvas back to DataURL ────────────────────────────
+        // If it’s a JPEG, request 92% quality to reduce artifacts.
+        let resizedDataURL;
+        if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
+          resizedDataURL = canvas.toDataURL('image/jpeg', 0.92);
+        } else {
+          // PNG, WebP, GIF, etc. remain lossless
+          resizedDataURL = canvas.toDataURL(file.type || 'image/png');
+        }
+
+        // Use that DataURL as the preview + eventual saved value
+        document.getElementById('profileImg').src = resizedDataURL;
+      };
+
+      // Start loading the offscreen <img>
+      img.src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+    // ─── Profile persistence logic ─────────────────────────────────────────
+    function saveProfileData() {
+      // 1) Read currentUser
+      const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+      if (!currentUser) return;
+
+      // 2) Grab editable fields
+      const nameEl     = document.getElementById("name");
+      const titleEl    = document.getElementById("title");
+      const locationEl = document.getElementById("location");
+      const phoneEl    = document.getElementById("phone");
+      const emailEl    = document.getElementById("email");
+
+      // 3) Experience (4 items)
+      const expEls = Array.from(
+        document.querySelectorAll(".section.white:nth-of-type(2) ul li.editable")
+      ).slice(0, 4);
+
+      // 4) Education paragraph
+      const eduEl = document.querySelector(".section.white:nth-of-type(2) p.editable");
+
+      // 5) Soft Skills (first UL)
+      const softEls = Array.from(
+        document.querySelectorAll(".section.blue ul:first-of-type li.editable")
+      ).slice(0, 4);
+
+      // 6) Technical Skills (second UL)
+      const techEls = Array.from(
+        document.querySelectorAll(".section.blue ul:nth-of-type(2) li.editable")
+      ).slice(0, 4);
+
+      // 7) Open To: fourth <section> under .section.white
+      const openEls = Array.from(
+        document.querySelectorAll(".section.white:nth-of-type(4) ul li.editable")
+      ).slice(0, 3);
+
+      // 8) Special Needs: fifth <section> under .section.white
+      const specialEls = Array.from(
+        document.querySelectorAll(".section.white:nth-of-type(5) ul li.editable")
+      ).slice(0, 4);
+
+      // 9) Parse Education
+      const eduText = eduEl.innerText.split("\n").map(line => line.trim());
+      const eduData = {
+        university: eduText[0].replace(/^University:\s*/i, "") || "",
+        bachelor:   eduText[1].replace(/^Bachelor:\s*/i, "") || "",
+        date:       eduText[2].replace(/^Date:\s*/i, "") || "",
+        gpa:        eduText[3].replace(/^GPA:\s*/i, "") || "",
+        activities: eduText[4].replace(/^Activities:\s*/i, "") || ""
+      };
+
+      // 10) Build user object
+      const updatedUser = {
+        fullName:    nameEl.innerText.trim(),
+        email:       emailEl.innerText.trim().toLowerCase(),
+        password:    null, // will fill below
+        currentJob:  titleEl.innerText.trim(),
+        location:    locationEl.innerText.trim(),
+        phoneNumber: phoneEl.innerText.trim(),
+        experience:  expEls.map(li => li.innerText.trim()),
+        education:   eduData,
+        softSkills:  softEls.map(li => li.innerText.trim()),
+        techSkills:  techEls.map(li => li.innerText.trim()),
+        openTo:      openEls.map(li => li.innerText.replace(/^-/, "").trim()),
+        specialNeeds: specialEls.map(li => li.innerText.trim())
+      };
+
+      // 11) Save the profile image
+      updatedUser.profileImage = document.getElementById("profileImg").src;
+
+      // 12) Load users[] and find match
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const idx   = users.findIndex(u => u.email === currentUser.email);
+      if (idx === -1) {
+        console.warn("Could not find currentUser in users[]");
+        return;
+      }
+
+      // 13) Preserve password
+      updatedUser.password = users[idx].password;
+
+      // 14) If email changed, check duplicates
+      const newEmail = updatedUser.email;
+      if (newEmail !== currentUser.email) {
+        const conflict = users.some((u, i) => i !== idx && u.email === newEmail);
+        if (conflict) {
+          alert("That email address is already taken by another user.");
+          emailEl.innerText = currentUser.email; // revert in UI
+          return;
+        }
+      }
+
+      // 15) Overwrite record
+      users[idx] = updatedUser;
+      localStorage.setItem("users", JSON.stringify(users));
+
+      // 16) Update currentUser
+      const newCurrent = {
+        fullName: updatedUser.fullName,
+        email:    updatedUser.email
+      };
+      localStorage.setItem("currentUser", JSON.stringify(newCurrent));
+
+      // 17) Show “saved” banner
+      const banner = document.createElement("div");
+      banner.innerText = "Profile saved!";
+      banner.style.position = "fixed";
+      banner.style.top = "1rem";
+      banner.style.left = "50%";
+      banner.style.transform = "translateX(-50%)";
+      banner.style.background = "#62aaff";
+      banner.style.color = "#fff";
+      banner.style.padding = "0.75rem 1.5rem";
+      banner.style.borderRadius = "6px";
+      banner.style.zIndex = "3000";
+      document.body.appendChild(banner);
+      setTimeout(() => banner.remove(), 2000);
+
+      // 18) Update navbar first name
+      const profileDiv = document.getElementById("profileContainer");
+      while (profileDiv.firstChild) profileDiv.removeChild(profileDiv.firstChild);
+      const avatar = document.createElement("img");
+      avatar.src = 'assets/OP_Logo.png';
+      avatar.alt = 'Profile';
+      avatar.style.width = '28px';
+      avatar.style.height = '28px';
+      avatar.style.borderRadius = '50%';
+      const firstName = newCurrent.fullName.split(" ")[0];
+      const nameLink = document.createElement("a");
+      nameLink.href = "profile.html";
+      nameLink.classList.add("js-transition");
+      nameLink.innerText = firstName;
+      nameLink.style.color = "#fff";
+      nameLink.style.fontWeight = "bold";
+      nameLink.style.textDecoration = "none";
+      const logoutLink = document.createElement("a");
+      logoutLink.href = "#";
+      logoutLink.innerText = "(Log Out)";
+      logoutLink.style.color = "#fff";
+      logoutLink.style.marginLeft = "0.5rem";
+      logoutLink.style.fontSize = "0.85rem";
+      logoutLink.onclick = e => {
+        e.preventDefault();
+        localStorage.removeItem("currentUser");
+        window.location.href = "index.html";
+      };
+      profileDiv.appendChild(avatar);
+      profileDiv.appendChild(nameLink);
+      profileDiv.appendChild(logoutLink);
+      localStorage.setItem("showProfileSaved", "true");
+      // Then reload the page:
+      window.location.reload();
+    }
+
+    // Ctrl+Enter or Cmd+Enter also saves & exits edit mode
+    document.addEventListener("keydown", e => {
+      if (!isEditing) return;
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        toggleEdit();
+      }
+    });
+
+    // ─── Prefill all fields on Page Load ──────────────────────────────────────
+    document.addEventListener("DOMContentLoaded", () => {
+      
+      const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+      if (!currentUser) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      // 1) Set name + email
+      document.getElementById("name").innerText  = currentUser.fullName;
+      document.getElementById("email").innerText = currentUser.email;
+
+      // 2) Load their full record
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const userRecord = users.find(u => u.email === currentUser.email) || {};
+
+      // 3) Restore profile image if saved
+      const imgEl = document.getElementById("profileImg");
+      if (userRecord.profileImage) {
+        imgEl.src = userRecord.profileImage;
+      }
+
+      // 4) If there is no other data yet, show default placeholders
+      const hasAnyProfileData = Boolean(
+        userRecord.currentJob  ||
+        userRecord.location    ||
+        userRecord.phoneNumber ||
+        (userRecord.experience  || []).some(x => x) ||
+        (userRecord.education   || {}).university ||
+        (userRecord.softSkills  || []).some(x => x) ||
+        (userRecord.techSkills  || []).some(x => x) ||
+        (userRecord.openTo      || []).some(x => x) ||
+        (userRecord.specialNeeds|| []).some(x => x)
+      );
+
+      if (!hasAnyProfileData) {
+        // No saved profile data → write default prompts
+        document.getElementById("title").innerText    = "Current job";
+        document.getElementById("location").innerText = "Location";
+        document.getElementById("phone").innerText    = "Phone number";
+
+        const expEls = Array.from(
+          document.querySelectorAll(".section.white:nth-of-type(2) ul li.editable")
+        ).slice(0, 4);
+        expEls.forEach((li, i) => li.innerText = `(Experience)`);
+
+        const eduEl = document.querySelector(".section.white:nth-of-type(2) p.editable");
+        eduEl.innerText =
+          "University: (e.g. State University)\n" +
+          "Bachelor:   (e.g. B.S. in Computer Science)\n" +
+          "Date:       (e.g. 2020–2024)\n" +
+          "GPA:        (e.g. 3.8)\n" +
+          "Activities: (e.g. Chess Club, Volunteer)";
+
+        const softEls = Array.from(
+          document.querySelectorAll(".section.blue ul:first-of-type li.editable")
+        ).slice(0, 4);
+        ["(e.g. Teamwork, Problem Solving)","...","...","..."]
+          .forEach((txt, i) => { if (softEls[i]) softEls[i].innerText = txt; });
+
+        const techEls = Array.from(
+          document.querySelectorAll(".section.blue ul:nth-of-type(2) li.editable")
+        ).slice(0, 4);
+        ["(e.g. C++, SQL)","...","...","..."].forEach((txt, i) => {
+          if (techEls[i]) techEls[i].innerText = txt;
+        });
+
+        // Open To (3 items)
+        const openEls = Array.from(
+          document.querySelectorAll(".section.white:nth-of-type(4) ul li.editable")
+        ).slice(0, 3);
+        ["(e.g. Full-Time, Remote, Internship)","...","..."]
+          .forEach((txt, i) => { if (openEls[i]) openEls[i].innerText = txt; });
+
+        // ── NEW: Special Needs (4 items) ─────────────────────────────────────
+        const specialEls = Array.from(
+          document.querySelectorAll(".section.white:nth-of-type(5) ul li.editable")
+        ).slice(0, 4);
+        ["(e.g. Mobility Assistance)","(e.g. ADHD)","(e.g. Visual Aid)","(e.g. Other)"]
+          .forEach((txt, i) => { if (specialEls[i]) specialEls[i].innerText = txt; });
+        // ─────────────────────────────────────────────────────────────────────────
+      } else {
+        // 5) Prefill all the fields from existing userRecord
+        document.getElementById("title").innerText    = userRecord.currentJob  || "";
+        document.getElementById("location").innerText = userRecord.location    || "";
+        document.getElementById("phone").innerText    = userRecord.phoneNumber || "";
+
+        const expEls = Array.from(
+          document.querySelectorAll(".section.white:nth-of-type(2) ul li.editable")
+        ).slice(0, 4);
+        (userRecord.experience || ["", "", "", ""]).forEach((txt, i) => {
+          if (expEls[i]) expEls[i].innerText = txt;
+        });
+
+        const eduEl = document.querySelector(".section.white:nth-of-type(2) p.editable");
+        const ed = userRecord.education || {};
+        if (eduEl) {
+          eduEl.innerText =
+            "University: " + (ed.university || "") + "\n" +
+            "Bachelor:   " + (ed.bachelor   || "") + "\n" +
+            "Date:       " + (ed.date       || "") + "\n" +
+            "GPA:        " + (ed.gpa        || "") + "\n" +
+            "Activities: " + (ed.activities || "");
+        }
+
+        const softEls = Array.from(
+          document.querySelectorAll(".section.blue ul:first-of-type li.editable")
+        ).slice(0, 4);
+        (userRecord.softSkills || ["", "", "", ""]).forEach((txt, i) => {
+          if (softEls[i]) softEls[i].innerText = txt;
+        });
+
+        const techEls = Array.from(
+          document.querySelectorAll(".section.blue ul:nth-of-type(2) li.editable")
+        ).slice(0, 4);
+        (userRecord.techSkills || ["", "", "", ""]).forEach((txt, i) => {
+          if (techEls[i]) techEls[i].innerText = txt;
+        });
+
+        // Open To (3 items)
+        const openEls = Array.from(
+          document.querySelectorAll(".section.white:nth-of-type(4) ul li.editable")
+        ).slice(0, 3);
+        (userRecord.openTo || ["", "", ""]).forEach((txt, i) => {
+          if (openEls[i]) openEls[i].innerText = txt;
+        });
+
+        // ── Prefill Special Needs (4 items) ────────────────────────────────────
+        const specialEls = Array.from(
+          document.querySelectorAll(".section.white:nth-of-type(5) ul li.editable")
+        ).slice(0, 4);
+        (userRecord.specialNeeds || ["", "", "", ""]).forEach((txt, i) => {
+          if (specialEls[i]) specialEls[i].innerText = txt;
+        });
+        // ─────────────────────────────────────────────────────────────────────────
+      }
+      if (localStorage.getItem("showProfileSaved") === "true") {
+        const banner = document.createElement("div");
+        banner.innerText = "Profile saved!";
+        banner.style.position = "fixed";
+        banner.style.top = "1rem";
+        banner.style.left = "50%";
+        banner.style.transform = "translateX(-50%)";
+        banner.style.background = "#62aaff";
+        banner.style.color = "#fff";
+        banner.style.padding = "0.75rem 1.5rem";
+        banner.style.borderRadius = "6px";
+        banner.style.zIndex = "3000";
+        document.body.appendChild(banner);
+        setTimeout(() => banner.remove(), 2000);
+
+        // Clear the flag so it doesn’t show again
+        localStorage.removeItem("showProfileSaved");
+      }
+    });
+    // ─── END Profile persistence logic ────────────────────────────────────────
+  </script>
+
+
+  <!-- EXTERNAL SCRIPT (nav, animations, signup/login logic, etc.) -->
+  <script src="js/script.js"></script>
+</body>
+</html>

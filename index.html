@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpenPath</title>
+  <link rel="icon" type="image/png" href="assets/OP_Logo.png">
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body class="fade-in">
+
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo js-transition">
+        <img src="assets/OP_Logo.png" alt="OpenPath Logo" class="logo-icon">
+        OpenPath
+      </a>
+      <div class="search">
+        <div class="search-container">
+          <input id="job-search-input" type="text" placeholder="Find your personalized job here">
+          <ul id="suggestions" class="suggestions"></ul>
+        </div>
+        <button class="disability-toggle">
+          <span class="icon-wrapper">
+            <img id="disabilityIcon" src="assets/checklist.png" alt="Disability Friendly">
+          </span>
+          <span>Disability Friendly</span>
+        </button>
+      </div>
+      <div class="burger" id="burger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <nav class="nav-links" id="navLinks">
+        <!-- give this link an id -->
+        <a id="loginLink" href="login.html" class="js-transition">Login</a>
+
+        <!-- and give this link an id -->
+        <a id="signupLink" href="signup.html" class="btn js-transition">Try OpenPath free</a>
+
+        <!-- keep the profileContainer in place -->
+        <div id="profileContainer" style="display: none;"></div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-flex">
+      <div class="hero-text">
+        <h1>Find Your Opportunities with OpenPath</h1>
+        <p>OpenPath helps people discover job opportunities in their area through an inclusive, easy-to-use platform built for everyone.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modules-style Training Section -->
+  <main class="modules">
+    <div class="container">
+      <article class="module-card visible">
+        <div class="module-image">
+          <img src="assets/Training Session.jpg" alt="Training Session">
+        </div>
+        <div class="module-content">
+          <h2>Training Program Modules</h2>
+          <p style="color: #FF9900; font-weight: bold;">Grow your skills. Grow your confidence.</p>
+          <p>Our built-in Training Hub Modules offers free, beginner-friendly courses module to help you build the skills employers are looking for. Whether it's digital literacy, communication, time management, or basic job readiness, we’re here to help you learn at your own pace.</p>
+          <a href="modules.html" class="btn js-transition">Get Started →</a>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2025 OpenPath. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+<script src="js/script.js"></script>
+ 
+
+
+  
+
+  
+
+</body>
+</html>

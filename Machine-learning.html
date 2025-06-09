@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Machine Learning | OpenPath</n></title>
+  <link rel="icon" type="image/png" href="assets/OP_Logo.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="fade-in">
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo js-transition">
+        <img src="assets/OP_Logo.png" alt="OpenPath Logo" class="logo-icon">
+        OpenPath
+      </a>
+      <!-- <div class="search">
+        <input type="text" placeholder="Find module">
+      </div> -->
+      <div class="burger" id="burger"><span></span><span></span><span></span></div>
+      <nav class="nav-links" id="navLinks">
+        <!-- give this link an id -->
+        <a id="loginLink" href="login.html" class="js-transition">Login</a>
+
+        <!-- and give this link an id -->
+        <a id="signupLink" href="signup.html" class="btn js-transition">Try OpenPath free</a>
+
+        <!-- keep the profileContainer in place -->
+        <div id="profileContainer" style="display: none;"></div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" style="background-image: url('images/wave-bg.svg'); background-size: cover; background-position: center;">
+    <div class="container">
+      <h1>Machine Learning</h1>
+    </div>
+  </section>
+
+  <!-- Back Button -->
+  <div class="container" style="margin-top:1rem;">
+    <a href="modules.html" class="logo js-transition" style="margin-bottom:2rem; display:inline-block; color:#043873;">← Back</a>
+  </div>
+
+  <!-- Content Sections -->
+  <main class="modules">
+    <div class="container">
+      <!-- Introduction -->
+      <article class="module-card">
+        <div class="module-image"><img src="assets/MachineLearning.png" alt="Machine Learning"></div>
+        <div class="module-content">
+          <h2>Introduction to Machine Learning</h2>
+          <p>Machine Learning (ML) is a subset of artificial intelligence enabling systems to learn from data and improve tasks without explicit programming. ML algorithms identify patterns in data, build predictive models, and can be applied to diverse domains—from image recognition to language translation and autonomous systems.</p>
+        </div>
+      </article>
+
+      <!-- Learning Paradigms -->
+      <section class="module-explanation">
+        <h2>Learning Paradigms</h2>
+        <div class="explanation-content">
+          <h4>Supervised Learning</h4>
+          <ul>
+            <li>Trains on labeled data (features + known outcomes).</li>
+            <li>Tasks: classification, regression.</li>
+            <li>Examples: spam detection, price prediction.</li>
+          </ul>
+          <h4>Unsupervised Learning</h4>
+          <ul>
+            <li>Trains on unlabeled data to find structure.</li>
+            <li>Tasks: clustering, dimensionality reduction.</li>
+            <li>Examples: customer segmentation, anomaly detection.</li>
+          </ul>
+          <h4>Reinforcement Learning</h4>
+          <ul>
+            <li>Agents learn by interacting with environment.</li>
+            <li>Tasks: control, game playing.</li>
+            <li>Examples: game AI, robotics.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Workflow Diagram -->
+      <section class="media-section module-card">
+        <div class="container">
+          <div class="media-wrapper">
+            <img src="assets/ml-workflow.png" alt="ML Workflow Diagram">
+          </div>
+        </div>
+      </section>
+
+      <!-- Core Algorithms -->
+      <section class="module-explanation">
+        <h2>Core Algorithms</h2>
+        <ul class="explanation-content">
+          <li><strong>Linear Regression:</strong> Predict continuous values.</li>
+          <li><strong>Decision Trees:</strong> Rule-based classification.</li>
+          <li><strong>Neural Networks:</strong> Deep models for complex patterns.</li>
+        </ul>
+      </section>
+
+      <!-- Evaluation Metrics -->
+      <section class="module-explanation">
+        <h2>Evaluation Metrics</h2>
+        <ul class="explanation-content">
+          <li>Accuracy, Precision, Recall, F1 Score</li>
+          <li>Mean Squared Error (MSE), R²</li>
+          <li>ROC-AUC for binary classification</li>
+        </ul>
+      </section>
+
+      <!-- Applications & Challenges -->
+      <section class="module-explanation">
+        <h2>Applications & Challenges</h2>
+        <div class="explanation-content">
+          <h4>Applications:</h4>
+          <ul>
+            <li>Computer Vision</li>
+            <li>Natural Language Processing</li>
+            <li>Recommendation Systems</li>
+          </ul>
+          <h4>Challenges:</h4>
+          <ul>
+            <li>Data Quality & Quantity</li>
+            <li>Model Interpretability</li>
+            <li>Bias & Ethical Concerns</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Module Video Section -->
+      <section class="module-card module-video">
+        <div class="module-image">
+          <video controls preload="metadata">
+            <source src="assets/Machine Learning _ What Is Machine Learning_ _ Introduction To Machine Learning _ 2024 _ Simplilearn.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <a href="https://youtu.be/ukzFI9rgwfU" class="video-source" target="_blank" rel="noopener">
+            ▶ Video Source
+          </a>
+        </div>
+      </section>
+
+      <!-- Conclusion -->
+      <section class="module-explanation">
+        <h2>Conclusion</h2>
+        <p>By understanding paradigms, algorithms, and challenges, you can leverage machine learning to extract insights and build intelligent systems, while responsibly managing data and model biases.</p>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 OpenPath. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

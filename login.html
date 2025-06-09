@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - OpenPath</title>
+  <link rel="icon" type="image/png" href="assets/OP_Logo.png">
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="fade-in">
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo js-transition">
+        <img src="assets/OP_Logo.png" alt="OpenPath Logo" class="logo-icon">
+        OpenPath
+      </a>
+      
+      <div class="burger"><span></span><span></span><span></span></div>
+      <nav class="nav-links">
+        <a href="index.html" class="js-transition">Home</a>
+        <!-- give this link an id -->
+        <a id="loginLink" href="login.html" class="js-transition">Login</a>
+
+        <!-- and give this link an id -->
+        <a id="signupLink" href="signup.html" class="btn js-transition">Try OpenPath free</a>
+
+        <!-- keep the profileContainer in place -->
+        <div id="profileContainer" style="display: none;"></div>
+      </nav>
+    </div>
+  </header>
+  <section class="auth-section">
+    <div class="auth-box">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required />
+        <div class="custom-warning" id="loginEmail-warning"></div>
+
+        <div style="position: relative; width: 100%;">
+  <!-- The existing password field (un‐changed) -->
+  <input
+    type="password"
+    id="loginPassword"
+    placeholder="Password"
+    required
+    style="width: 100%; padding-right: 2.75rem;"
+  />
+  <!-- A simple <span> we can freely position inside the input -->
+  <span
+    id="loginToggle"
+    onclick="togglePassword('loginPassword','loginToggle')"
+    style="
+      position: absolute;
+      top: 38%;
+      right: 0.75rem;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: #374151;
+      user-select: none;
+    "
+  >
+    Show
+  </span>
+</div>
+<div class="custom-warning" id="loginPassword-warning"></div>
+
+
+        <button type="submit">Log In</button>
+      </form>
+      <p>Don’t have an account? <a href="signup.html" class="js-transition">Sign up here</a></p>
+    </div>
+  </section>
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 OpenPath. All rights reserved.</p>
+    </div>
+  </footer>
+  <script>
+  document.getElementById("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    // hide old warnings
+    document.getElementById("loginEmail-warning").style.display = "none";
+    document.getElementById("loginPassword-warning").style.display = "none";
+
+    const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+    const pass  = document.getElementById("loginPassword").value;
+
+    if (!email) {
+      document.getElementById("loginEmail-warning").innerText = "Please enter your email.";
+      document.getElementById("loginEmail-warning").style.display = "block";
+      return;
+    }
+    if (!pass) {
+      document.getElementById("loginPassword-warning").innerText = "Please enter your password.";
+      document.getElementById("loginPassword-warning").style.display = "block";
+      return;
+    }
+
+    // Look up users[]
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const found = users.find(u => u.email === email && u.password === pass);
+
+    if (!found) {
+      document.getElementById("loginPassword-warning").innerText = "Invalid email or password.";
+      document.getElementById("loginPassword-warning").style.display = "block";
+      return;
+    }
+
+    // Store currentUser (omit password)
+    const currentUser = { fullName: found.fullName, email: found.email };
+    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+    // Redirect
+    window.location.href = "index.html";
+  });
+  function togglePassword(inputId, toggleId) {
+    const pwd = document.getElementById(inputId);
+    const txt = document.getElementById(toggleId);
+    if (pwd.type === 'password') {
+      pwd.type = 'text';
+      txt.innerText = 'Hide';
+    } else {
+      pwd.type = 'password';
+      txt.innerText = 'Show';
+    }
+  }
+</script>
+<script src="js/script.js"></script>
+
+  
+</body>
+</html>

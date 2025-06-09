@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account - OpenPath</title>
+  <link rel="icon" type="image/png" href="assets/OP_Logo.png">
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    /* Styles specific to the authentication section and validation messages */
+    .auth-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+      min-height: calc(100vh - 70px); /* Assumes 70px header from styles.css */
+      background-color: #F3F4F6; /* Light grey page background to make card pop */
+    }
+
+    .auth-box {
+      background: #FFFFFF; /* White background for the card */
+      padding: 2.5rem; /* Increased padding */
+      border-radius: 12px; /* More rounded corners */
+      max-width: 400px;
+      width: 100%;
+      /* Softer, more modern shadow */
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.07);
+      color: #374151; /* Default text color for the box */
+    }
+
+    .auth-box h2 { /* "Create Account" heading */
+      margin-top: 0;
+      margin-bottom: 2rem; /* More space below heading */
+      color: #043873; /* MODIFIED - Similar to login.html h2 color */
+      text-align: center;
+      font-size: 1.5rem; /* Kept from image-like version */
+      font-weight: 600; /* Kept from image-like version */
+    }
+
+    .auth-box .input-container {
+      position: relative;
+      margin-bottom: 1.25rem; /* Adjusted spacing between inputs */
+    }
+
+    .auth-box input {
+      width: 100%;
+      padding: 0.75rem 1rem; /* Standard padding */
+      border-radius: 8px; /* More rounded inputs */
+      border: 1px solid #D1D5DB; /* Light Gray border (Gray 300) */
+      box-sizing: border-box;
+      font-size: 0.875rem; /* Kept from image-like version (14px) */
+      color: #1F2937; /* Kept from image-like version (Dark gray for input text) */
+      background-color: #FFFFFF;
+    }
+
+    .auth-box input::placeholder {
+      color: #9CA3AF; /* Medium Gray for placeholder (Gray 400) */
+    }
+
+    .auth-box input:focus {
+        border-color: #2563EB; /* Blue 600 for focus */
+        outline: none;
+        /* Tailwind-like focus ring */
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .auth-box button[type="submit"] { /* "Sign Up" button */
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background-color: #043873; /* MODIFIED - Similar to login.html button color */
+      color: #FFFFFF; /* Kept (matches login.html) */
+      border: none;
+      border-radius: 8px; /* Consistent rounding from image-like version */
+      font-weight: bold; /* MODIFIED - Similar to login.html button font weight */
+      font-size: 0.875rem; /* Kept from image-like version (14px) */
+      cursor: pointer;
+      margin-top: 1.5rem; /* More space above button */
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .auth-box button[type="submit"]:hover {
+      background-color: #022c5b; /* MODIFIED - Similar to login.html button hover color */
+    }
+    .auth-box button[type="submit"]:active {
+        transform: scale(0.98);
+    }
+
+    .auth-box p { /* "Already have an account?" text */
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.9rem; /* MODIFIED - Similar to login.html p font size */
+      color: #4B5563; /* Kept from image-like version (Gray 600) */
+    }
+
+    .auth-box p a { /* "Log in here" link */
+      color: #043873; /* MODIFIED - Similar to login.html link color */
+      text-decoration: none; /* Image link is not underlined */
+      font-weight: normal; /* MODIFIED - To better match login.html implied link style */
+    }
+
+    .auth-box p a:hover {
+        text-decoration: underline; /* Underline on hover for affordance */
+    }
+
+    /* Custom Warning Styles (remain visually distinct for error states) */
+    .custom-warning {
+      position: absolute;
+      bottom: calc(100% + 5px);
+      left: 10px;
+      background-color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+      display: none;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #D8000C; /* Error text color */
+      width: max-content;
+      max-width: calc(100% - 20px);
+    }
+
+    .custom-warning::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 15px;
+      border-width: 7px;
+      border-style: solid;
+      border-color: white transparent transparent transparent;
+    }
+
+    .custom-warning-icon {
+      background-color: #EF4444; /* Red for error icon to match text */
+      color: white;
+      border-radius: 3px;
+      padding: 3px 7px;
+      font-weight: bold;
+      margin-right: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85em;
+      line-height: 1;
+    }
+    .custom-warning-text {
+        white-space: nowrap;
+    }
+
+    .input-error-highlight {
+        border-color: #EF4444 !important; /* Red border for error */
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important; /* Red focus ring for error */
+    }
+
+    /* Modal styles (kept from image-like version) */
+    #successModal {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: 12px; 
+      text-align: center;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.07); 
+      max-width: 90%;
+      width: 350px; 
+    }
+    .modal-content h3 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      color: #1F2937; 
+      font-size: 1.25rem; 
+      font-weight: 600;
+    }
+    .modal-buttons button {
+      padding: 0.6rem 1.2rem;
+      margin: 0 0.5rem;
+      border: none;
+      border-radius: 8px; 
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.875rem;
+      transition: background-color 0.2s ease-in-out, transform 0.2s ease;
+    }
+    .modal-buttons button:active {
+        transform: scale(0.95);
+    }
+    .modal-buttons button#loginRedirect {
+      background: #043873; /* MODIFIED - Similar to new button color */
+      color: #fff;
+    }
+    .modal-buttons button#loginRedirect:hover {
+      background: #022c5b; /* MODIFIED - Similar to new button hover color */
+    }
+    .modal-buttons button#closeModal {
+      background: #E5E7EB; 
+      color: #374151; 
+    }
+    .modal-buttons button#closeModal:hover {
+      background: #D1D5DB; 
+    }
+  </style>
+</head>
+<body class="fade-in">
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">
+        <img src="assets/OP_Logo.png" alt="OpenPath Logo" class="logo-icon">
+        OpenPath
+      </a>
+      <div class="burger"><span></span><span></span><span></span></div>
+      <nav class="nav-links">
+        <a href="index.html" class="js-transition">Home</a>
+        <!-- give this link an id -->
+        <a id="loginLink" href="login.html" class="js-transition">Login</a>
+
+        <!-- and give this link an id -->
+        <a id="signupLink" href="signup.html" class="btn js-transition">Try OpenPath free</a>
+
+        <!-- keep the profileContainer in place -->
+        <div id="profileContainer" style="display: none;"></div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="auth-section">
+    <div class="auth-box">
+      <h2>Create Account</h2>
+      <form novalidate>
+        <div class="input-container">
+          <input type="text" id="fullName" placeholder="Full Name" />
+          <div class="custom-warning" id="fullName-warning"></div>
+        </div>
+        <div class="input-container">
+          <input type="email" id="email" placeholder="Email" />
+          <div class="custom-warning" id="email-warning"></div>
+        </div>
+        <div class="input-container" style="position: relative; width: 100%;">
+  <!-- The existing password field (un‐changed) -->
+  <input
+    type="password"
+    id="password"
+    placeholder="Password"
+    style="width: 100%; padding-right: 2.75rem;"
+  />
+  <!-- Plain <span> pinned to the right -->
+  <span
+    id="signupToggle"
+    onclick="togglePassword('password','signupToggle')"
+    style="
+      position: absolute;
+      top: 38%;
+      right: 0.75rem;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 0.875rem;
+      color: #374151;
+      user-select: none;
+    "
+  >
+    Show
+  </span>
+  <div class="custom-warning" id="password-warning"></div>
+</div>
+
+        <button type="submit">Sign Up</button>
+      </form>
+      <p>Already have an account? <a href="login.html" class="js-transition">Log in here</a></p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 OpenPath. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <div id="successModal">
+    <div class="modal-content">
+      <h3>Sign Up Complete! Please Log In</h3>
+      <div class="modal-buttons">
+        <button id="loginRedirect">Log In</button>
+        <button id="closeModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showWarning(inputId, message) {
+      const warningEl = document.getElementById(inputId + '-warning');
+      warningEl.innerHTML = `<span class="custom-warning-icon">!</span>
+                             <span class="custom-warning-text">${message}</span>`;
+      warningEl.style.display = 'flex';
+      document.getElementById(inputId)
+              .classList.add('input-error-highlight');
+    }
+    function hideWarning(inputId) {
+      const warningEl = document.getElementById(inputId + '-warning');
+      warningEl.style.display = 'none';
+      warningEl.innerHTML = '';
+      document.getElementById(inputId)
+              .classList.remove('input-error-highlight');
+    }
+
+    // ─── Helper: validate a single field ────────────────────────────────
+    function validateSingleField(inputId, showError) {
+      hideWarning(inputId);
+      const el = document.getElementById(inputId);
+      const val = el.value;
+      const trimmed = val.trim();
+      let isValid = true;
+
+      switch (inputId) {
+        case 'fullName':
+          if (trimmed === '') {
+            if (showError) showWarning('fullName', 'Please fill out this field.');
+            isValid = false;
+          }
+          break;
+
+        case 'email':
+          if (trimmed === '') {
+            if (showError) showWarning('email', 'Please fill out this field.');
+            isValid = false;
+          } else {
+            if (val.includes(' ')) {
+              if (showError) showWarning('email', 'Email cannot contain spaces.');
+              isValid = false;
+            } else {
+              const atIdx = val.indexOf('@');
+              const dotIdx = val.lastIndexOf('.');
+              if (!(atIdx > 0 && dotIdx > atIdx + 1 && dotIdx < val.length - 1)) {
+                if (showError)
+                  showWarning('email', 'Please enter a valid email (e.g. name@example.com).');
+                isValid = false;
+              }
+            }
+          }
+          break;
+
+        case 'password':
+          const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+          if (trimmed === '') {
+            if (showError) showWarning('password', 'Please fill out this field.');
+            isValid = false;
+          } else if (!pattern.test(val)) {
+            if (showError)
+              showWarning('password',
+                'Password must be 8+ chars with uppercase, lowercase, and a number.');
+            isValid = false;
+          }
+          break;
+      }
+
+      return isValid;
+    }
+
+    // ─── Add blur listeners so we show warnings on “blur” ────────────────
+    ['fullName','email','password'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('blur', () => validateSingleField(id, true));
+    });
+
+    // ─── Single “submit” listener that does everything ───────────────────
+    document.querySelector('.auth-box form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // 1) Clear all previous warnings
+      ['fullName','email','password'].forEach(id => hideWarning(id));
+
+      // 2) Validate each field; stop on first error
+      for (let id of ['fullName','email','password']) {
+        if (!validateSingleField(id, true)) {
+          document.getElementById(id).focus();
+          return;
+        }
+      }
+
+      // 3) Build the new user object
+      const newUser = {
+        fullName: document.getElementById('fullName').value.trim(),
+        email:    document.getElementById('email').value.trim().toLowerCase(),
+        password: document.getElementById('password').value
+      };
+
+      // 4) Pull existing users (or empty array)
+      let users = JSON.parse(localStorage.getItem('users') || '[]');
+
+      // 5) Reject duplicate emails
+      if (users.some(u => u.email === newUser.email)) {
+        showWarning('email', 'An account with that email already exists.');
+        return;
+      }
+
+      // 6) Save the new user
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+
+      // 7) Show the success modal
+      document.getElementById('successModal').style.display = 'flex';
+    });
+
+    // ─── Modal buttons (unchanged) ────────────────────────────────────────
+    document.getElementById('closeModal')
+      .addEventListener('click', function() {
+        document.getElementById('successModal').style.display = 'none';
+      });
+    document.getElementById('loginRedirect')
+      .addEventListener('click', function() {
+        window.location.href = 'login.html';
+      });
+      function togglePassword(inputId, toggleId) {
+    const pwd = document.getElementById(inputId);
+    const txt = document.getElementById(toggleId);
+    if (pwd.type === 'password') {
+      pwd.type = 'text';
+      txt.innerText = 'Hide';
+    } else {
+      pwd.type = 'password';
+      txt.innerText = 'Show';
+    }
+  }
+  </script>
+  
+  <script src="js/script.js"></script>
+</body>
+</html>

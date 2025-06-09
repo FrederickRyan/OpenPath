@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laravel Framework | OpenPath</title>
+  <link rel="icon" type="image/png" href="assets/OP_Logo.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="fade-in">
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo js-transition">
+        <img src="assets/OP_Logo.png" alt="OpenPath Logo" class="logo-icon">
+        OpenPath
+      </a>
+      <!-- <div class="search">
+        <input type="text" placeholder="Find module">
+      </div> -->
+      <div class="burger" id="burger"><span></span><span></span><span></span></div>
+      <nav class="nav-links" id="navLinks">
+        <!-- give this link an id -->
+        <a id="loginLink" href="login.html" class="js-transition">Login</a>
+
+        <!-- and give this link an id -->
+        <a id="signupLink" href="signup.html" class="btn js-transition">Try OpenPath free</a>
+
+        <!-- keep the profileContainer in place -->
+        <div id="profileContainer" style="display: none;"></div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" style="background-image: url('images/wave-bg.svg'); background-size: cover; background-position: center;">
+    <div class="container">
+      <h1>Laravel Framework</h1>
+    </div>
+  </section>
+
+  <!-- Back Button -->
+  <div class="container" style="margin-top:1rem;">
+    <a href="modules.html" class="btn js-transition" style="margin-bottom:2rem; display:inline-block; color:#043873;">← Back</a>
+  </div>
+
+  <!-- Content Sections -->
+  <main class="modules">
+    <div class="container">
+
+      <!-- Introduction -->
+      <article class="module-card">
+        <div class="module-image"><img src="assets/Laravel.png" alt="Laravel Logo"></div>
+        <div class="module-content">
+          <h2>Introduction to Laravel</h2>
+          <p>Laravel is a modern PHP web framework that follows the MVC pattern, offering expressive syntax, built-in tools for routing, authentication, and caching, and a thriving ecosystem with packages and extensions to accelerate web application development.</p>
+        </div>
+      </article>
+
+      <!-- Getting Started -->
+      <section class="module-explanation">
+        <h2>Getting Started</h2>
+        <div class="explanation-content">
+          <ul>
+            <li>Install via Composer: <code>composer create-project laravel/laravel project-name</code></li>
+            <li>Configure environment in <code>.env</code> (DB, app key, cache).</li>
+            <li>Run local server: <code>php artisan serve</code>.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- MVC Architecture Diagram -->
+      <section class="media-section module-card">
+        <div class="container">
+          <div class="media-wrapper">
+            <img src="assets/mvc.png" alt="Laravel MVC Architecture">
+          </div>
+        </div>
+      </section>
+
+      <!-- Blade Templating -->
+      <section class="module-explanation">
+        <h2>Blade Templating</h2>
+        <div class="explanation-content">
+          <ul>
+            <li>Use <code>.blade.php</code> files for views.</li>
+            <li>Leverage directives like <code>@yield</code>, <code>@section</code>, <code>@include</code>.</li>
+            <li>Supports layouts, components, and template inheritance.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Eloquent ORM -->
+      <section class="module-explanation">
+        <h2>Eloquent ORM</h2>
+        <div class="explanation-content">
+          <ul>
+            <li>Active Record implementation for database models.</li>
+            <li>Define relationships: <code>hasOne</code>, <code>hasMany</code>, <code>belongsTo</code>.</li>
+            <li>Use query builder: <code>User::where('active',1)->get();</code></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Routing & Middleware -->
+      <section class="module-explanation">
+        <h2>Routing &amp; Middleware</h2>
+        <div class="explanation-content">
+          <ul>
+            <li>Define routes in <code>routes/web.php</code> and <code>routes/api.php</code>.</li>
+            <li>Apply middleware for authentication, CSRF, rate-limiting.</li>
+            <li>Group routes and apply namespace, prefix, middleware.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Tutorial Video -->
+      <section class="module-card module-video">
+        <div class="module-image">
+          <video controls preload="metadata">
+            <source src="assets/Understand Laravel basics 2024 _ Laravel tutorial _ Laravel for beginners.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <a href="https://www.youtube.com/watch?v=AEVhR-hD2Wk" class="video-source" target="_blank" rel="noopener">
+            ▶ Video Source
+          </a>
+        </div>
+      </section>
+
+      <!-- Security & Best Practices -->
+      <section class="module-explanation">
+        <h2>Security &amp; Best Practices</h2>
+        <div class="explanation-content">
+          <ul>
+            <li>Use built-in CSRF protection (<code>@csrf</code> in forms).</li>
+            <li>Encrypt sensitive data with Laravel Encryption.</li>
+            <li>Follow naming conventions and use environment variables.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Conclusion -->
+      <section class="module-explanation">
+        <h2>Conclusion</h2>
+        <p>Laravel’s elegant syntax, powerful ORM, robust routing, and vibrant ecosystem make it an excellent choice for building modern, maintainable PHP applications.</p>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container"><p>&copy; 2025 OpenPath. All rights reserved.</p></div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud Computing | OpenPath</title>
+  <link rel="icon" type="image/png" href="assets/OP_Logo.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="fade-in">
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo js-transition">
+        <img src="assets/OP_Logo.png" alt="OpenPath Logo" class="logo-icon">
+        OpenPath
+      </a>
+      <div class="search">
+        <input type="text" placeholder="Find module">
+      </div>
+      <div class="burger" id="burger"><span></span><span></span><span></span></div>
+      <nav class="nav-links" id="navLinks">
+        <!-- give this link an id -->
+        <a id="loginLink" href="login.html" class="js-transition">Login</a>
+
+        <!-- and give this link an id -->
+        <a id="signupLink" href="signup.html" class="btn js-transition">Try OpenPath free</a>
+
+        <!-- keep the profileContainer in place -->
+        <div id="profileContainer" style="display: none;"></div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section with wave background -->
+  <section class="hero" style="background-image: url('images/wave-bg.svg'); background-size: cover; background-position: center;">
+    <div class="container">
+      <h1>Cloud Computing</h1>
+    </div>
+  </section>
+
+  <!-- Back Button -->
+  <div class="container" style="margin-top:1rem;">
+    <a href="modules.html" class="btn js-transition" style="margin-bottom:2rem; display:inline-block; color: #043873;">← Back</a>
+  </div>
+
+  <!-- Content Sections -->
+  <main class="modules">
+    <div class="container">
+      <!-- Introduction -->
+      <article class="module-card">
+        <div class="module-image"><img src="assets/cloud computing.png" alt="Cloud Computing"></div>
+        <div class="module-content">
+          <h2>Basic Cloud Fundamentals</h2>
+          <p>Cloud computing has revolutionized how organizations provision, deploy, and manage IT resources. Instead of maintaining physical servers, storage, and networking hardware on-premises, users can access a shared pool of configurable computing resources over the internet. This “as-a-service” model provides on-demand scalability, pay-per-use billing, and rapid elasticity to support dynamic workloads and accelerate innovation.</p>
+        </div>
+      </article>
+
+      <!-- Key Service Models -->
+      <section class="module-explanation">
+        <h2>Key Service Models</h2>
+        <div class="explanation-content">
+          <h4>Infrastructure as a Service (IaaS)</h4>
+          <ul>
+            <li>What it is: Virtualized compute, storage, and network resources on demand.</li>
+            <li>When to use: Full control over OS and networking without on‑prem hardware.</li>
+            <li>Examples: Amazon EC2, Microsoft Azure VMs, Google Compute Engine.</li>
+          </ul>
+          <h4>Platform as a Service (PaaS)</h4>
+          <ul>
+            <li>What it is: Managed environment for building, testing, and deploying applications.</li>
+            <li>When to use: Focus on code while provider handles runtime, scaling, middleware.</li>
+            <li>Examples: Google App Engine, Azure App Service, Heroku.</li>
+          </ul>
+          <h4>Software as a Service (SaaS)</h4>
+          <ul>
+            <li>What it is: Fully managed application software delivered over the Internet.</li>
+            <li>When to use: Access ready-to-use apps for collaboration and productivity.</li>
+            <li>Examples: Salesforce, Microsoft 365, Slack.</li>
+          </ul>
+        </div>
+      </section>
+      <section class="media-section module-card">
+          <div class="container">
+          <div class="media-wrapper">
+              <!-- Image example -->
+              <img src="assets/Cloud model.png" alt="Cloud Architecture Diagram">
+          </div>
+          </div>
+      </section>
+    
+      <!-- Deployment Models -->
+      <section class="module-explanation">
+        <h2>Deployment Models</h2>
+        <ul class="explanation-content">
+          <li><strong>Public Cloud:</strong> Services exposed to multiple tenants over the public Internet. Offers the greatest economy of scale but may raise concerns about data residency.</li>
+          <li><strong>Private Cloud:</strong> Dedicated infrastructure for a single organization, either on-premises or hosted by a third party. Provides enhanced security and compliance control.</li>
+          <li><strong>Hybrid Cloud:</strong> A combination of public and private clouds connected via secure networking, allowing workloads to move between environments for flexibility and cost optimization.</li>
+        </ul>
+      </section>
+
+      <!-- Core Characteristics -->
+      <section class="module-explanation">
+        <h2>Core Characteristics</h2>
+        <ul class="explanation-content">
+            <li><strong>Elasticity &amp; Scalability:</strong> Resources can automatically expand or contract to match demand, ensuring performance without overprovisioning.</li>
+            <li><strong>On-Demand Self-Service:</strong> Users can provision computing capabilities as needed via a web portal or API, with no human intervention from the provider.</li>
+            <li><strong>Broad Network Access:</strong> Services are available over the Internet and accessed through standard mechanisms (e.g., web browsers, mobile apps).</li>
+            <li><strong>Resource Pooling &amp; Multi-Tenancy:</strong> Providers share computing resources among multiple customers while maintaining logical isolation.</li>
+            <li><strong>Measured Service (Pay-As-You-Go):</strong> Usage is monitored, measured, and billed based on resources consumed (compute hours, storage gigabytes, data transfer).</li>
+        </ul>
+      </section>
+
+      <!-- Advantages & Challenges -->
+      <section class="module-explanation">
+        <h2>Advantages and Challenges</h2>
+        <div class="explanation-content">
+          <h4>Advantages:</h4>
+          <ul>
+            <li><strong>Cost Efficiency:</strong> Eliminates capital expenditure on hardware and reduces operational costs through economies of scale.</li>
+            <li><strong>Rapid Provisioning:</strong> New servers, databases, or applications can be spun up in minutes rather than weeks.</li>
+            <li><strong>Global Reach:</strong> Providers maintain data centers worldwide, enabling low-latency access for global users.</li>
+          </ul>
+          <h4>Challenges:</h4>
+          <ul>
+            <li><strong>Security &amp; Compliance:</strong> Protecting sensitive data in a shared environment requires strong encryption, identity management, and regulatory alignment.</li>
+            <li><strong>Vendor Lock-In:</strong> Proprietary services and APIs may make it difficult to migrate workloads between providers.</li>
+            <li><strong>Performance Variability:</strong> Multi-tenant architectures can lead to noisy-neighbor effects if not properly managed.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Security Considerations -->
+       <section class="module-card">
+        <h2>Security Considerations</h2>
+        <p>Cloud security operates on a shared responsibility model, where the provider secures the infrastructure, and the customer secures their data and applications. Key practices include:</p>
+        <ul>
+            <li><strong>Identity and Access Management (IAM):</strong> Enforce least-privilege permissions and multi-factor authentication.</li>
+            <li><strong>Data Encryption:</strong> Encrypt data both at rest and in transit using strong cryptographic protocols.</li>
+            <li><strong>Network Isolation:</strong> Use virtual private clouds (VPCs), subnets, and security groups to restrict traffic.</li>
+            <li><strong>Monitoring &amp; Logging:</strong> Implement continuous monitoring, audit trails, and automated alerts for unusual activity.</li>
+        </ul>
+
+      </section>
+      <!-- Module Video Section -->
+        <section class="module-card module-video">
+        <div class="module-image">
+            <video controls preload="metadata" width="900" height="506">
+                <source src="assets/What is Cloud Security_.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <a href="https://youtu.be/jI8IKpjiCSM?si=MugMvr70ljPoKYii"
+                class="video-source"
+                target="_blank"
+                rel="noopener">
+                ▶ Video Source
+            </a>
+        </div>
+        </section>
+
+
+      <!-- Conclusion -->
+      <section class="module-explanation">
+        <h2>Conclusion</h2>
+        <p>Understanding service and deployment models, core characteristics, and security principles unlocks the full potential of cloud architectures, delivering agility, cost savings, and innovation while effectively managing risks.</p>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container"><p>&copy; 2025 OpenPath. All rights reserved.</p></div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

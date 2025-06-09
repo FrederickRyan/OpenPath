@@ -1,0 +1,633 @@
+/* Reset */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* let your main content area expand to fill space */
+main {
+  flex: 1;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+/* Container */
+.container { width: 90%; max-width: 1200px; margin: 0 auto; }
+/* Header */
+header {
+  background: #043873;
+  position: fixed;
+  top: 0; left: 0; width: 100%;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+/* push everything down so it isn’t hidden under the fixed header */
+body { padding-top: 70px; }
+
+/* Navbar */
+.navbar {
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap;
+  padding: 1rem 0;
+}
+.logo-icon {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+.logo { display: flex; align-items: center; color: #fff; font-size: 1.25rem; font-weight: bold; }
+.logo svg { width: 24px; height: 24px; fill: #fff; margin-right: 0.5rem; }
+.search { flex: 1; display: flex; justify-content: center; }
+.search input { width: 250px; max-width: 100%; padding: 0.5rem 1rem; border: none; border-radius: 25px; }
+.nav-links { display: flex; align-items: center; gap: 1rem; transition: max-height 0.3s ease; }
+.nav-links a { color: #fff; font-size: 0.9rem; white-space: nowrap; }
+
+/* Hamburger */
+.burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+.burger span { width: 25px; height: 3px; background: #fff; }
+
+/* Buttons */
+.btn {
+  display: inline-block; padding: 0.5rem 1rem;
+  border-radius: 5px; font-weight: bold;
+  position: relative; overflow: hidden;
+  transition: transform 0.2s ease;
+}
+.btn::after {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255,255,255,0.2);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.btn:hover::after { transform: scaleX(1); }
+.btn:active { transform: scale(0.95); }
+.nav-links .btn {
+  background: #ffd000; color: #023e8a; border-radius: 25px;
+  transition: box-shadow 0.3s ease;
+}
+.nav-links .btn:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+
+/* Hero */
+.hero {
+  background: #043873; color: #fff;
+  text-align: center; padding: 4rem 0; overflow: hidden;
+  /* extra gap below header */
+  margin-top: 0rem;
+}
+
+.hero h1 { font-size: 2rem; animation: fadeInDown 1s ease-out;
+ }
+ /* ─── Hero Layout & Responsiveness ─── */
+.hero {
+  /* make the hero a flex container so its content is always centered */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #043873;
+  color: #fff;
+  padding: 6rem 1rem;               /* more breathing room on desktop */
+}
+
+.hero .hero-text {
+  max-width: 700px;                 /* prevent super-long lines */
+  text-align: center;               /* center under the h1 */
+  margin: 0 auto;
+  padding: 0 1rem;                  /* gutter on mobile */
+}
+
+.hero .hero-text h1 {
+  font-size: 2.5rem;                /* larger on desktop */
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  animation: fadeInDown 1s ease-out;
+}
+
+.hero .hero-text p {
+  font-size: 1.125rem;              /* slightly bigger */
+  line-height: 1.6;
+  color: #e2e8f0;
+  animation: fadeUp 1s ease forwards 0.5s;
+}
+
+/* ─── Tablet ─── */
+@media (max-width: 992px) {
+  .hero {
+    padding: 5rem 1rem;
+  }
+  .hero .hero-text h1 {
+    font-size: 2.25rem;
+  }
+  .hero .hero-text p {
+    font-size: 1rem;
+  }
+} 
+
+/* ─── Phone ─── */
+@media (max-width: 576px) {
+  .hero {
+    padding: 4rem 1rem;
+  }
+  .hero .hero-text h1 {
+    font-size: 1.75rem;
+  }
+  .hero .hero-text p {
+    font-size: 0.95rem;
+  }
+}
+.disability-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 10px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* always-visible border around the checklist slot */
+.icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  background-color: #043873;
+  /* keep the inner img centered */
+  overflow: hidden;
+}
+
+/* the checklist itself—we’ll hide/show this */
+.icon-wrapper img {
+  width: 70%;      /* scale icon down inside the border */
+  height: auto;
+  visibility: hidden;    /* start “off” */
+}
+/* Animations */
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px);} to { opacity: 1; transform: translateY(0);} }
+@keyframes fadeUp    { from { opacity: 0; transform: translateY(20px);}  to { opacity: 1; transform: translateY(0);} }
+/* 1) Hero paragraph slides up on load */
+.hero-text p {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1s ease forwards 0.5s;
+}
+
+/* 2) Staggered fade-up of the Training card’s content */
+.module-card .module-content h2,
+.module-card .module-content p,
+.module-card .module-content .btn {
+  opacity: 0;                /* start hidden */
+  transform: translateY(20px);
+  transition: none;          /* we’re using animation instead */
+}
+
+/* only once the card itself becomes “visible” do we animate its children */
+.module-card.visible .module-content h2 {
+  animation: fadeUp 0.6s ease forwards 0.2s;
+}
+.module-card.visible .module-content p {
+  animation: fadeUp 0.6s ease forwards 0.4s;
+}
+.module-card.visible .module-content .btn {
+  animation: fadeUp 0.6s ease forwards 0.6s;
+}
+/* ensure the image starts hidden & down */
+.module-card .module-image img {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* when the card itself becomes visible, animate the image in first */
+.module-card.visible .module-image img {
+  animation: fadeUp 0.6s ease forwards 0.1s;
+}
+
+@media (max-width: 768px) {
+  .module-card {
+    flex-direction: column;      /* stack image above content */
+    align-items: center;
+  }
+  .module-card .module-image,
+  .module-card .module-content {
+    flex: 1 1 100%;              /* both columns span 100% */
+    max-width: 100%;
+  }
+  .module-card .module-image {
+    margin-bottom: 1rem;         /* space between image & text */
+  }
+}
+/* Modules */
+.modules { padding: 4rem 0; }
+.module-card {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 2rem; margin-bottom: 4rem; flex-wrap: wrap;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.module-card.visible { opacity: 1; transform: translateY(0); }
+.module-card:nth-child(even) .module-image { order: 2; }
+.module-image, .module-content { flex: 1 1 45%; }
+.module-image {
+  display: flex; justify-content: center; align-items: center;
+  margin-bottom: 1rem;
+}
+.module-image img, .module-image iframe {
+  max-width: 100%; height: auto;
+}
+.module-content h2 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #333; }
+.module-content p  { margin-bottom: 1rem; color: #555; }
+.module-content .btn { background: #0077b6; color: #fff; transition: background-color 0.3s ease; }
+.module-content .btn:hover { background-color: #005f8f; }
+
+.module-video .module-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+}
+.module-video .module-image iframe {
+  width: 100%;
+  max-width: 45rem;
+  height: 30rem; /* or whatever aspect ratio you need */
+  border: none;
+}
+
+/* Explanation Section with animation */
+.module-explanation {
+  margin-bottom: 4rem; /* same as module-card */
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.module-explanation.visible {
+  opacity: 1; transform: translateY(0);
+}
+.module-explanation .explanation-content { padding: 2rem 0; }
+
+/* Explanation Section */
+.module-explanation {
+  margin-bottom: 4rem; /* same spacing as module-card */
+}
+.module-explanation .explanation-content {
+  padding: 2rem 0;
+}
+/* Footer */
+footer { background: #043873; color: #fff; text-align: center; padding: 2rem 0; }
+footer p { font-size: 0.9rem; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  body { padding-top: 80px; }
+  .burger { display: flex; }
+  .nav-links {
+    display: none; flex-direction: column; align-items: center;
+    width: 100%; background: #043873; padding: 1rem 0;
+    max-height: 0; overflow: hidden;
+  }
+  .nav-links.show { display: flex; max-height: 500px; }
+  .search input { width: 200px; }
+  .hero h1 { font-size: 1.75rem; }
+  .module-card { flex-direction: column; margin-bottom: 2rem; }
+  .module-card:nth-child(even) .module-image { order: 0; }
+  .module-video .video-source {
+    left: 0rem;   /* 12px */
+    
+    font-size: 0.8rem;
+  }
+}
+@media (max-width: 600px) {
+  .search { order: 3; width: 100%; margin: 0.5rem 0; }
+  .search input { width: 100%; }
+  .hero h1 { font-size: 1.5rem; }
+  .module-video .video-source {
+    left: 10rem;    /* 8px */
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; }
+}
+body.fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+a, a:visited, a:active {
+  text-decoration: none !important;
+}
+
+.module-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.module-image img,
+.module-image iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+.module-video .module-image {
+  position: relative;               /* create a positioning context */
+}
+
+
+/* Responsive Video & Source Badge Positioning */
+.module-video .module-image {
+  /* ensure the container can shrink/grow */
+  width: 100%;
+  max-width: 900px;      /* matches your original max width */
+  margin: 0 auto;        /* center the container */
+}
+
+.module-video .module-image video {
+  width: 100% !important;  /* fill parent’s width */
+  height: auto !important; /* adjust height to maintain aspect ratio */
+  display: block;
+}
+.module-video .video-source {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  z-index: 10;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.module-video .video-source:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: translateY(-2px);
+}
+@media (max-width: 768px) {
+  .module-video .video-source {
+    top: 0.5rem;
+    left: 0.5rem;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.4rem;
+  }
+}
+@media (max-width: 480px) {
+  .module-video .video-source {
+    top: 0.4rem;
+    left: 0.4rem;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.3rem;
+  }
+}
+
+/* Responsive media‐section images */
+.media-section .media-wrapper {
+  text-align: center; /* center the image wrapper */
+}
+.media-section .media-wrapper img {
+  display: inline-block;
+  width: 80%;      /* fill 80% of its container */
+  max-width: 600px;/* never grow beyond 600px */
+  height: auto;    /* maintain aspect ratio */
+  margin: 0 auto;  /* center in container */
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .media-section .media-wrapper img {
+    width: 90%;
+    max-width: 450px;
+  }
+}
+
+/* Phone */
+@media (max-width: 480px) {
+  .media-section .media-wrapper img {
+    width: 100%;
+    max-width: 350px;
+  }
+}
+
+.search-container { position: relative; }
+.suggestions {
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  max-height: 200px; overflow-y: auto;
+  list-style: none;
+  margin: 0; padding: 0;
+  z-index: 1001;
+}
+.suggestions li {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+.suggestions li:hover {
+  background: #f0f0f0;
+}
+
+/* Fade-in animation for job cards */
+.job-card {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.job-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.suggestions {
+  display: none;            /* ← hide by default */
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  max-height: 200px; overflow-y: auto;
+  list-style: none;
+  margin: 0; padding: 0;
+  z-index: 1001;
+}
+/* Bounce animation on hover only */
+@keyframes hoverBounce {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-3px); }
+  100% { transform: translateY(0); }
+}
+
+.apply-btn {
+  background: #ffd000;
+  color: #023e8a;
+  border: none;
+  border-radius: 25px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  /* no transitions here! */
+}
+
+.apply-btn:hover {
+  animation: hoverBounce 0.4s ease;
+}
+
+/* 2) Pull the hero up under the header on desktop (header = 70px) */
+.hero {
+  margin-top: -70px;                                 /* valign under header */
+  padding-top: calc(6rem + 70px) !important;         /* original padding + header */
+}
+
+/* 3) On tablet / small desktop your hero padding shrinks to 5rem */
+@media (max-width: 992px) {
+  .hero {
+    margin-top: -70px;
+    padding-top: calc(5rem + 70px) !important;
+  }
+}
+
+/* 4) On mobile you bump body padding-top to 80px—so match that here */
+@media (max-width: 768px) {
+  .hero {
+    margin-top: -80px;
+    padding-top: calc(4rem + 80px) !important;       /* your mobile hero padding = 4rem */
+  }
+}
+.no-results {
+  display: block;             /* override any inline style */
+  max-width: 600px;
+  margin: 2rem auto;          /* vertical gap + auto horizontal centering */
+  text-align: center;
+  color: #fff;
+  background: #e63946;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  font-style: italic;
+}
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.modal {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+  transform: scale(0.7);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.modal-overlay.show { display: flex; }
+.modal-overlay.show .modal {
+  transform: scale(1);
+  opacity: 1;
+}
+#closeModal {
+  background-color: #023e8a;        /* deep blue */
+  color: #fff;                      /* white text */
+  border: none;
+  padding: 0.6rem 1.2rem;           /* roomy click area */
+  border-radius: 4px;               /* rounded corners */
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease,
+              transform 0.1s ease,
+              box-shadow 0.2s ease;
+}
+
+/* lift and brighten on hover */
+#closeModal:hover {
+  background-color: #0353a4;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* press-down effect on click */
+#closeModal:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+
+/* Let the auth section grow to fill space */
+    .auth-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Ensure footer sits at the bottom */
+    
+    .auth-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 1rem;
+      min-height: 80vh;
+    }
+    .auth-box {
+      background: #f9f9f9;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .auth-box h2 {
+      margin-bottom: 1.5rem;
+      color: #043873;
+      text-align: center;
+    }
+    .auth-box input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .auth-box button {
+      width: 100%;
+      padding: 0.75rem;
+      background: #043873;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .auth-box button:hover {
+      background: #022c5b;
+    }
+    .auth-box p {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+    .auth-box p a {
+      color: #043873;
+      text-decoration: underline;
+    }

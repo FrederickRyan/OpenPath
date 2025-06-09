@@ -1,0 +1,19 @@
+# Node or build artifacts (in case you ever add a toolchain)
+node_modules/
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE and editor settings
+/.vscode/
+/.idea/
+/*.sublime-workspace
+/*.sublime-project
+
+# Logs, temp
+*.log
+*.tmp
+*.swp

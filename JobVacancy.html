@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Job Vacancy - OpenPath</title>
+  <link rel="icon" type="image/png" href="assets/OP_Logo.png">
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .job-card {
+      background-color: #043873;
+      color: #fff;
+      border: 1px solid #5fa8d3;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .job-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .job-type {
+      display: inline-block;
+      background-color: #4895ef;
+      color: #fff;
+      padding: 0.3rem 0.8rem;
+      border-radius: 10px;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .job-card p {
+      margin-bottom: 1rem;
+    }
+    .job-card a {
+      color: #fff;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    /* ─── Modal styling (matches your existing “Login Required” modal) ─── */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .modal-overlay.show {
+      display: flex;
+    }
+    .modal {
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 8px;
+      text-align: center;
+      max-width: 90%;
+      width: 320px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07),
+                  0 4px  6px -4px rgba(0, 0, 0, 0.07);
+    }
+    .modal h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+      color: #1F2937;
+    }
+    .modal p {
+      margin-bottom: 1.5rem;
+      color: #4B5563;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    .modal button {
+      padding: 0.5rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin: 0 0.5rem 0.5rem;
+      transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+    }
+    .modal button:active {
+      transform: scale(0.97);
+    }
+    .modal .primary-btn {
+      background-color: #043873;
+      color: #fff;
+    }
+    .modal .primary-btn:hover {
+      background-color: #022c5b;
+    }
+    .modal .secondary-btn {
+      background-color: #E5E7EB;
+      color: #374151;
+    }
+    .modal .secondary-btn:hover {
+      background-color: #D1D5DB;
+    }
+  </style>
+</head>
+<body class="fade-in">
+  <!-- Header -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo js-transition">
+        <img src="assets/OP_Logo.png" alt="OpenPath Logo" class="logo-icon">
+        OpenPath
+      </a>
+      <div class="search">
+        <div class="search-container">
+          <input id="job-search-input" type="text" placeholder="Find your personalized job here">
+          <ul id="suggestions" class="suggestions"></ul>
+        </div>
+        <button class="disability-toggle">
+          <span class="icon-wrapper">
+            <img id="disabilityIcon" src="assets/checklist.png" alt="Disability Friendly">
+          </span>
+          <span>Disability Friendly</span>
+        </button>
+      </div>
+      
+      <nav class="nav-links" id="navLinks">
+        <!-- give this link an id -->
+        <a id="loginLink" href="login.html" class="js-transition">Login</a>
+
+        <!-- and give this link an id -->
+        <a id="signupLink" href="signup.html" class="btn js-transition">Try OpenPath free</a>
+
+        <!-- keep the profileContainer in place -->
+        <div id="profileContainer" style="display: none;"></div>
+      </nav>
+      <div id="burger" class="burger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </header>
+  <div id="job-no-results" class="no-results" style="display:none;">
+    Sorry, no jobs found.
+  </div>
+  
+  <!-- Results -->
+<main class="modules">
+  <div class="container">
+    <!-- Job #1 (disability-friendly) -->
+    <div class="job-card">
+      <div class="disability-icon">✅ Disability Friendly</div>
+      <div class="job-summary">
+        <h2>Cashier – AZKO Living World</h2>
+        <span class="job-type">Full-time</span>
+        <p>As a cashier, you will be responsible for handling payment transactions and customer service.</p>
+      </div>
+      <div class="job-details">
+        <p><strong>Salary:</strong> Rp 3,500,000 – 4,500,000 / month</p>
+        <p><strong>Location:</strong> Jakarta, Indonesia</p>
+        <p><strong>Full Description:</strong>  
+           Responsible for recording daily sales, maintaining the cashier area, and supporting the team's sales targets.
+        </p>
+        <button class="apply-btn btn">Apply Now</button>
+      </div>
+    </div>
+
+    <!-- Job #2 -->
+    <div class="job-card">
+      <div class="job-summary">
+        <h2>Software Engineer – TechCorp</h2>
+        <span class="job-type">Full-time</span>
+        <p>Develop and integrate features into a large-scale web platform.</p>
+      </div>
+      <div class="job-details">
+        <p><strong>Salary:</strong> Rp 10,000,000 – 15,000,000 / month</p>
+        <p><strong>Location:</strong> Bandung, Indonesia</p>
+        <p><strong>Full Description:</strong>  
+           Collaborate with the DevOps team, write RESTful APIs, and implement CI/CD best practices.
+        </p>
+        <button class="apply-btn btn">Apply Now</button>
+      </div>
+    </div>
+
+    <!-- Job #3 (disability-friendly) -->
+    <div class="job-card">
+      <div class="disability-icon">✅ Disability Friendly</div>
+      <div class="job-summary">
+        <h2>UX Designer – CreativeStudio</h2>
+        <span class="job-type">Contract</span>
+        <p>Design intuitive and responsive user interfaces for mobile applications.</p>
+      </div>
+      <div class="job-details">
+        <p><strong>Salary:</strong> Rp 7,000,000 – 9,000,000 / month</p>
+        <p><strong>Location:</strong> Surabaya, Indonesia</p>
+        <p><strong>Full Description:</strong>  
+           Create wireframes, high-fidelity prototypes, and conduct UX testing with end users.
+        </p>
+        <button class="apply-btn btn">Apply Now</button>
+      </div>
+    </div>
+
+    <!-- Job #4 -->
+    <div class="job-card">
+      <div class="job-summary">
+        <h2>Data Analyst – DataWorks</h2>
+        <span class="job-type">Part-time</span>
+        <p>Collect, analyze, and visualize business data for strategic insights.</p>
+      </div>
+      <div class="job-details">
+        <p><strong>Salary:</strong> Rp 5,000,000 – 6,000,000 / month</p>
+        <p><strong>Location:</strong> Yogyakarta, Indonesia</p>
+        <p><strong>Full Description:</strong>  
+           Create dashboards in Power BI, clean datasets, and present weekly reports.
+        </p>
+        <button class="apply-btn btn">Apply Now</button>
+      </div>
+    </div>
+
+    <!-- Job #5 -->
+    <div class="job-card">
+      <div class="job-summary">
+        <h2>Marketing Specialist – BrandWave</h2>
+        <span class="job-type">Full-time</span>
+        <p>Design and run digital marketing campaigns to increase brand awareness.</p>
+      </div>
+      <div class="job-details">
+        <p><strong>Salary:</strong> Rp 8,000,000 – 10,000,000 / month</p>
+        <p><strong>Location:</strong> Medan, Indonesia</p>
+        <p><strong>Full Description:</strong>  
+           Analyze the market, manage social media ads, and collaborate with the creative team for marketing content.
+        </p>
+        <button class="apply-btn btn">Apply Now</button>
+      </div>
+    </div>
+
+    <!-- Job #6 (disability-friendly) -->
+    <div class="job-card">
+      <div class="disability-icon">✅ Disability Friendly</div>
+      <div class="job-summary">
+        <h2>Warehouse Associate – LogiStore</h2>
+        <span class="job-type">Full-time</span>
+        <p>Receive, store, and ship goods according to warehouse operational standards.</p>
+      </div>
+      <div class="job-details">
+        <p><strong>Salary:</strong> Rp 4,000,000 – 5,000,000 / month</p>
+        <p><strong>Location:</strong> Bekasi, Indonesia</p>
+        <p><strong>Full Description:</strong>  
+           Manage inventory, prepare orders, and ensure safety and cleanliness of the warehouse area.
+        </p>
+        <button class="apply-btn btn">Apply Now</button>
+      </div>
+    </div>
+
+    <!-- Job #7 -->
+    <div class="job-card">
+      <div class="job-summary">
+        <h2>HR Coordinator – PeopleFirst</h2>
+        <span class="job-type">Part-time</span>
+        <p>Support recruitment processes, onboarding, and employee administration.</p>
+      </div>
+      <div class="job-details">
+        <p><strong>Salary:</strong> Rp 6,000,000 – 7,000,000 / month</p>
+        <p><strong>Location:</strong> Semarang, Indonesia</p>
+        <p><strong>Full Description:</strong>  
+           Schedule interviews, manage employee databases, and assist HR development programs.
+        </p>
+        <button class="apply-btn btn">Apply Now</button>
+      </div>
+    </div>
+
+    <!-- Job #8 (disability-friendly) -->
+    <div class="job-card">
+      <div class="disability-icon">✅ Disability Friendly</div>
+      <div class="job-summary">
+        <h2>Social Media Manager – DigiMedia</h2>
+        <span class="job-type">Contract</span>
+        <p>Manage social media content and analyze engagement for various client brands.</p>
+      </div>
+      <div class="job-details">
+        <p><strong>Salary:</strong> Rp 9,000,000 – 11,000,000 / month</p>
+        <p><strong>Location:</strong> Bali, Indonesia</p>
+        <p><strong>Full Description:</strong>  
+           Create content calendars, monitor performance metrics, and optimize social media strategies.
+        </p>
+        <button class="apply-btn btn">Apply Now</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2025 OpenPath. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ─── Existing “Login Required” Modal (unchanged) ─────────────────────────── -->
+  <div id="loginModalOverlay" class="modal-overlay">
+    <div class="modal">
+      <p>Please log in to apply for this job.</p>
+      <button id="closeModal" class="btn">Close</button>
+    </div>
+  </div>
+
+  <!-- ─── New: “Profile Completion Check” Modal ───────────────────────────────── -->
+  <div id="confirmModalOverlay" class="modal-overlay">
+    <div class="modal">
+      <h3>Profile Check</h3>
+      <p>Are you sure your profile is complete before applying?</p>
+      <button id="confirmSubmit" class="primary-btn">Submit</button>
+      <button id="confirmProfile" class="secondary-btn">Go to Profile</button>
+    </div>
+  </div>
+
+  <!-- ─── New: “Success” Modal ─────────────────────────────────────────────────── -->
+  <div id="successModalOverlay" class="modal-overlay">
+    <div class="modal">
+      <h3>Application Sent</h3>
+      <p id="successMessage">
+        <!-- Will be filled dynamically with user’s email -->
+      </p>
+      <button id="successClose" class="primary-btn">Close</button>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
