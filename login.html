@@ -77,44 +77,89 @@
       <p>&copy; 2025 OpenPath. All rights reserved.</p>
     </div>
   </footer>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script>
+    const firebaseConfig = {
+    apiKey: "AIzaSyC8YLw8QViNT3yp2mSY8EO7OtJDL7ea5YI",
+    authDomain: "openpath-56a25.firebaseapp.com",
+    databaseURL: "https://openpath-56a25-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    projectId: "openpath-56a25",
+    storageBucket: "openpath-56a25.firebasestorage.app",
+    messagingSenderId: "720563865978",
+    appId: "1:720563865978:web:583e82bf5ab34332e6eec3"
+  };
+    // initialize
+    firebase.initializeApp(firebaseConfig);
+    // now define the global `database` variable
+    const database = firebase.database();
+    // (optional) if you want to be extra‐sure it’s global:
+    window.database = database;
+  </script>
+
+
   <script>
-  document.getElementById("loginForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-    // hide old warnings
-    document.getElementById("loginEmail-warning").style.display = "none";
-    document.getElementById("loginPassword-warning").style.display = "none";
+  document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
 
-    const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-    const pass  = document.getElementById("loginPassword").value;
+      // grab inputs & warnings
+      const emailInput = document.getElementById("loginEmail");
+      const passInput  = document.getElementById("loginPassword");
+      const emailWarning    = document.getElementById("loginEmail-warning");
+      const passwordWarning = document.getElementById("loginPassword-warning");
+      emailWarning.style.display = passwordWarning.style.display = "none";
 
-    if (!email) {
-      document.getElementById("loginEmail-warning").innerText = "Please enter your email.";
-      document.getElementById("loginEmail-warning").style.display = "block";
-      return;
-    }
-    if (!pass) {
-      document.getElementById("loginPassword-warning").innerText = "Please enter your password.";
-      document.getElementById("loginPassword-warning").style.display = "block";
-      return;
-    }
+      const email    = emailInput.value.trim().toLowerCase();
+      const password = passInput.value;
 
-    // Look up users[]
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const found = users.find(u => u.email === email && u.password === pass);
+      // basic front-end checks
+      if (!email) {
+        emailWarning.innerText = "Please enter your email.";
+        return emailWarning.style.display = "block";
+      }
+      if (!password) {
+        passwordWarning.innerText = "Please enter your password.";
+        return passwordWarning.style.display = "block";
+      }
 
-    if (!found) {
-      document.getElementById("loginPassword-warning").innerText = "Invalid email or password.";
-      document.getElementById("loginPassword-warning").style.display = "block";
-      return;
-    }
+      try {
+        // query /users by email
+        const snap = await database
+          .ref('users')
+          .orderByChild('email')
+          .equalTo(email)
+          .once('value');
 
-    // Store currentUser (omit password)
-    const currentUser = { fullName: found.fullName, email: found.email };
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        if (!snap.exists()) {
+          emailWarning.innerText = "No account found with this email.";
+          return emailWarning.style.display = "block";
+        }
 
-    // Redirect
-    window.location.href = "index.html";
-  });
+        // look for matching password
+        let loggedIn = false;
+        snap.forEach(child => {
+          const user = child.val();
+          if (user.password === password) {
+            // store id + profile info
+            localStorage.setItem("currentUser", JSON.stringify({
+              id:       child.key,
+              fullName: user.fullName,
+              email:    user.email
+            }));
+            loggedIn = true;
+            window.location.href = "index.html";
+          }
+        });
+
+        if (!loggedIn) {
+          passwordWarning.innerText = "Incorrect password.";
+          passwordWarning.style.display = "block";
+        }
+      } catch (err) {
+        console.error("Login error:", err);
+        alert("An error occurred. Please try again later.");
+      }
+    });
   function togglePassword(inputId, toggleId) {
     const pwd = document.getElementById(inputId);
     const txt = document.getElementById(toggleId);

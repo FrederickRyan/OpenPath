@@ -291,6 +291,25 @@
       </div>
     </div>
   </div>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script>
+    const firebaseConfig = {
+    apiKey: "AIzaSyC8YLw8QViNT3yp2mSY8EO7OtJDL7ea5YI",
+    authDomain: "openpath-56a25.firebaseapp.com",
+    databaseURL: "https://openpath-56a25-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    projectId: "openpath-56a25",
+    storageBucket: "openpath-56a25.firebasestorage.app",
+    messagingSenderId: "720563865978",
+    appId: "1:720563865978:web:583e82bf5ab34332e6eec3"
+  };
+    // initialize
+    firebase.initializeApp(firebaseConfig);
+    // now define the global `database` variable
+    const database = firebase.database();
+    // (optional) if you want to be extra‐sure it’s global:
+    window.database = database;
+  </script>
 
   <script>
     function showWarning(inputId, message) {
@@ -370,43 +389,72 @@
     });
 
     // ─── Single “submit” listener that does everything ───────────────────
-    document.querySelector('.auth-box form').addEventListener('submit', function(e) {
-      e.preventDefault();
+    document.querySelector('.auth-box form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    // 1) Clear warnings
+    ['fullName','email','password'].forEach(id => hideWarning(id));
 
-      // 1) Clear all previous warnings
-      ['fullName','email','password'].forEach(id => hideWarning(id));
-
-      // 2) Validate each field; stop on first error
-      for (let id of ['fullName','email','password']) {
-        if (!validateSingleField(id, true)) {
-          document.getElementById(id).focus();
-          return;
-        }
-      }
-
-      // 3) Build the new user object
-      const newUser = {
-        fullName: document.getElementById('fullName').value.trim(),
-        email:    document.getElementById('email').value.trim().toLowerCase(),
-        password: document.getElementById('password').value
-      };
-
-      // 4) Pull existing users (or empty array)
-      let users = JSON.parse(localStorage.getItem('users') || '[]');
-
-      // 5) Reject duplicate emails
-      if (users.some(u => u.email === newUser.email)) {
-        showWarning('email', 'An account with that email already exists.');
+    // 2) Basic validation
+    for (let id of ['fullName','email','password']) {
+      if (!validateSingleField(id, true)) {
+        document.getElementById(id).focus();
         return;
       }
+    }
 
-      // 6) Save the new user
-      users.push(newUser);
-      localStorage.setItem('users', JSON.stringify(users));
+    // 3) Grab & normalize the email
+    const email = document
+      .getElementById('email')
+      .value
+      .trim()
+      .toLowerCase();
 
-      // 7) Show the success modal
+    // 4) CHECK FOR DUPLICATE
+    try {
+      const usersRef = database.ref('users');
+      // perform the query
+      const snapshot = await usersRef
+        .orderByChild('email')
+        .equalTo(email)
+        .once('value');
+
+      console.log('Duplicate-check snapshot.val():', snapshot.val());
+      console.log('snapshot.exists()?', snapshot.exists());
+
+      if (snapshot.exists()) {
+        // bail out if we found a match
+        return showWarning('email', 'This email is already registered.');
+      }
+
+      // 5) EMAIL IS UNIQUE → build your full user object
+      const newUser = {
+        fullName:   document.getElementById('fullName').value.trim(),
+        email,     
+        password:   document.getElementById('password').value,
+        currentJob:   "Current Job",
+        location:     "Location",
+        phoneNumber:  "Phone Number",
+        experience:   ["(Experience)","(Experience)","(Experience)","(Experience)"],
+        education:    { university:"", bachelor:"", date:"", gpa:"", activities:"" },
+        softSkills:   ["e.g. Teamwork, Problem Solving)","...","...","..."],
+        techSkills:   ["(e.g. C++, SQL)","...","...","..."],
+        openTo:       ["(e.g. Full-time, Remote, Internship)","...","..."],
+        specialNeeds: ["(e.g. Mobility Assistance)","(e.g. Hearing Support)","(e.g. Visual Aid)","(e.g. Other)"],
+        profileImage: "assets/Default_profile.png"
+      };
+
+      // 6) PUSH IT!
+      const pushRef = await usersRef.push(newUser);
+      console.log('Pushed new user at key:', pushRef.key);
+
+      // 7) Show success modal
       document.getElementById('successModal').style.display = 'flex';
-    });
+
+    } catch (err) {
+      console.error('Error during sign-up:', err);
+      alert('Something went wrong. Check the console for details.');
+    }
+  });
 
     // ─── Modal buttons (unchanged) ────────────────────────────────────────
     document.getElementById('closeModal')

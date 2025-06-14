@@ -1,0 +1,20 @@
+{
+  "name": "openpath",
+  "version": "1.0.0",
+  "description": "A desktop wrapper around my static SE site",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "make-win": "electron-packager . OpenPathApp --platform=win32 --arch=x64 --out=dist --overwrite"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FrederickRyan/OpenPath.git"
+  },
+  "author": "Your Name",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^36.4.0",
+    "electron-packager": "^17.1.2"
+  }
+}

@@ -294,10 +294,32 @@
       <button id="closeModal" class="btn">Close</button>
     </div>
   </div>
+<!-- 1) Firebase Realtime-DB + Storage SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+  <!-- 2) Init Firebase -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "…",
+      authDomain: "openpath-56a25.firebaseapp.com",
+      databaseURL:"https://openpath-56a25-default-rtdb.asia-southeast1.firebasedatabase.app/",
+      projectId:"openpath-56a25",
+      storageBucket:"openpath-56a25.appspot.com",
+      messagingSenderId:"720563865978",
+      appId:"1:720563865978:web:…"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const storage  = firebase.storage();
+  </script>
 
   <!-- MAIN SCRIPT: nav, animations, signup/login logic, profile logic, etc. -->
   <script>
+    
     let isEditing = false;
+    
 
     function toggleEdit() {
       isEditing = !isEditing;
@@ -314,172 +336,42 @@
       }
     }
 
-    // When user selects a new file, load it into the <img>
-document.getElementById('imageInput').addEventListener('change', function (event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      alert('Please choose a valid image file.');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const img = new Image();
-      img.onload = function () {
-        // ─── Decide WHEN and HOW much to downsize ─────────────────────────
-        // Only resize if both dimensions exceed 1000px.
-        // Otherwise, keep original size.
-        const MAX_DIMENSION = 1000; 
-        let width  = img.width;
-        let height = img.height;
-
-        if (width > MAX_DIMENSION && height > MAX_DIMENSION) {
-          if (width > height) {
-            height = Math.round((height * MAX_DIMENSION) / width);
-            width  = MAX_DIMENSION;
-          } else {
-            width  = Math.round((width * MAX_DIMENSION) / height);
-            height = MAX_DIMENSION;
-          }
-        } else {
-          // If at least one dimension ≤1000px, we keep the original dimensions
-          width  = img.width;
-          height = img.height;
-        }
-
-        // ─── Draw into a canvas at the chosen size ──────────────────────────
-        const canvas = document.createElement('canvas');
-        canvas.width  = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        // ─── Convert the canvas back to DataURL ────────────────────────────
-        // If it’s a JPEG, request 92% quality to reduce artifacts.
-        let resizedDataURL;
-        if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
-          resizedDataURL = canvas.toDataURL('image/jpeg', 0.92);
-        } else {
-          // PNG, WebP, GIF, etc. remain lossless
-          resizedDataURL = canvas.toDataURL(file.type || 'image/png');
-        }
-
-        // Use that DataURL as the preview + eventual saved value
-        document.getElementById('profileImg').src = resizedDataURL;
-      };
-
-      // Start loading the offscreen <img>
-      img.src = e.target.result;
-    };
-
-    reader.readAsDataURL(file);
-  });
+    
 
     // ─── Profile persistence logic ─────────────────────────────────────────
-    function saveProfileData() {
-      // 1) Read currentUser
-      const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
-      if (!currentUser) return;
+    async function saveProfileData() {
+    const updated = {
+      fullName:    document.getElementById('name').innerText.trim(),
+      email:       document.getElementById('email').innerText.trim().toLowerCase(),
+      currentJob:  document.getElementById('title').innerText.trim(),
+      location:    document.getElementById('location').innerText.trim(),
+      phoneNumber: document.getElementById('phone').innerText.trim(),
+      experience:  Array.from(document.querySelectorAll(".section.white:nth-of-type(2) ul li.editable")).map(li=>li.innerText.trim()),
+      education:   (() => {
+        const lines = document.querySelector(".section.white:nth-of-type(2) p.editable").innerText.split("\n");
+        return {
+          university: lines[0].replace(/^University:\s*/,''),
+          bachelor:   lines[1].replace(/^Bachelor:\s*/,''),
+          date:       lines[2].replace(/^Date:\s*/,''),
+          gpa:        lines[3].replace(/^GPA:\s*/,''),
+          activities: lines[4].replace(/^Activities:\s*/,'')
+        };
+      })(),
+      softSkills:  Array.from(document.querySelectorAll(".section.blue ul:first-of-type li.editable")).map(li=>li.innerText.trim()),
+      techSkills:  Array.from(document.querySelectorAll(".section.blue ul:nth-of-type(2) li.editable")).map(li=>li.innerText.trim()),
+      openTo:      Array.from(document.querySelectorAll(".section.white:nth-of-type(4) ul li.editable")).map(li=>li.innerText.trim()),
+      specialNeeds:Array.from(document.querySelectorAll(".section.white:nth-of-type(5) ul li.editable")).map(li=>li.innerText.trim()),
+      profileImage: lastUploadedURL || originalData.profileImage,
+      password:    originalData.password
+    };
 
-      // 2) Grab editable fields
-      const nameEl     = document.getElementById("name");
-      const titleEl    = document.getElementById("title");
-      const locationEl = document.getElementById("location");
-      const phoneEl    = document.getElementById("phone");
-      const emailEl    = document.getElementById("email");
+    try {
+      await userRef.update(updated);
+      // 1A) Update localStorage.currentUser.fullName
+      const cu = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      cu.fullName = updated.fullName;
+      localStorage.setItem('currentUser', JSON.stringify(cu));
 
-      // 3) Experience (4 items)
-      const expEls = Array.from(
-        document.querySelectorAll(".section.white:nth-of-type(2) ul li.editable")
-      ).slice(0, 4);
-
-      // 4) Education paragraph
-      const eduEl = document.querySelector(".section.white:nth-of-type(2) p.editable");
-
-      // 5) Soft Skills (first UL)
-      const softEls = Array.from(
-        document.querySelectorAll(".section.blue ul:first-of-type li.editable")
-      ).slice(0, 4);
-
-      // 6) Technical Skills (second UL)
-      const techEls = Array.from(
-        document.querySelectorAll(".section.blue ul:nth-of-type(2) li.editable")
-      ).slice(0, 4);
-
-      // 7) Open To: fourth <section> under .section.white
-      const openEls = Array.from(
-        document.querySelectorAll(".section.white:nth-of-type(4) ul li.editable")
-      ).slice(0, 3);
-
-      // 8) Special Needs: fifth <section> under .section.white
-      const specialEls = Array.from(
-        document.querySelectorAll(".section.white:nth-of-type(5) ul li.editable")
-      ).slice(0, 4);
-
-      // 9) Parse Education
-      const eduText = eduEl.innerText.split("\n").map(line => line.trim());
-      const eduData = {
-        university: eduText[0].replace(/^University:\s*/i, "") || "",
-        bachelor:   eduText[1].replace(/^Bachelor:\s*/i, "") || "",
-        date:       eduText[2].replace(/^Date:\s*/i, "") || "",
-        gpa:        eduText[3].replace(/^GPA:\s*/i, "") || "",
-        activities: eduText[4].replace(/^Activities:\s*/i, "") || ""
-      };
-
-      // 10) Build user object
-      const updatedUser = {
-        fullName:    nameEl.innerText.trim(),
-        email:       emailEl.innerText.trim().toLowerCase(),
-        password:    null, // will fill below
-        currentJob:  titleEl.innerText.trim(),
-        location:    locationEl.innerText.trim(),
-        phoneNumber: phoneEl.innerText.trim(),
-        experience:  expEls.map(li => li.innerText.trim()),
-        education:   eduData,
-        softSkills:  softEls.map(li => li.innerText.trim()),
-        techSkills:  techEls.map(li => li.innerText.trim()),
-        openTo:      openEls.map(li => li.innerText.replace(/^-/, "").trim()),
-        specialNeeds: specialEls.map(li => li.innerText.trim())
-      };
-
-      // 11) Save the profile image
-      updatedUser.profileImage = document.getElementById("profileImg").src;
-
-      // 12) Load users[] and find match
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const idx   = users.findIndex(u => u.email === currentUser.email);
-      if (idx === -1) {
-        console.warn("Could not find currentUser in users[]");
-        return;
-      }
-
-      // 13) Preserve password
-      updatedUser.password = users[idx].password;
-
-      // 14) If email changed, check duplicates
-      const newEmail = updatedUser.email;
-      if (newEmail !== currentUser.email) {
-        const conflict = users.some((u, i) => i !== idx && u.email === newEmail);
-        if (conflict) {
-          alert("That email address is already taken by another user.");
-          emailEl.innerText = currentUser.email; // revert in UI
-          return;
-        }
-      }
-
-      // 15) Overwrite record
-      users[idx] = updatedUser;
-      localStorage.setItem("users", JSON.stringify(users));
-
-      // 16) Update currentUser
-      const newCurrent = {
-        fullName: updatedUser.fullName,
-        email:    updatedUser.email
-      };
-      localStorage.setItem("currentUser", JSON.stringify(newCurrent));
-
-      // 17) Show “saved” banner
       const banner = document.createElement("div");
       banner.innerText = "Profile saved!";
       banner.style.position = "fixed";
@@ -493,42 +385,11 @@ document.getElementById('imageInput').addEventListener('change', function (event
       banner.style.zIndex = "3000";
       document.body.appendChild(banner);
       setTimeout(() => banner.remove(), 2000);
-
-      // 18) Update navbar first name
-      const profileDiv = document.getElementById("profileContainer");
-      while (profileDiv.firstChild) profileDiv.removeChild(profileDiv.firstChild);
-      const avatar = document.createElement("img");
-      avatar.src = 'assets/OP_Logo.png';
-      avatar.alt = 'Profile';
-      avatar.style.width = '28px';
-      avatar.style.height = '28px';
-      avatar.style.borderRadius = '50%';
-      const firstName = newCurrent.fullName.split(" ")[0];
-      const nameLink = document.createElement("a");
-      nameLink.href = "profile.html";
-      nameLink.classList.add("js-transition");
-      nameLink.innerText = firstName;
-      nameLink.style.color = "#fff";
-      nameLink.style.fontWeight = "bold";
-      nameLink.style.textDecoration = "none";
-      const logoutLink = document.createElement("a");
-      logoutLink.href = "#";
-      logoutLink.innerText = "(Log Out)";
-      logoutLink.style.color = "#fff";
-      logoutLink.style.marginLeft = "0.5rem";
-      logoutLink.style.fontSize = "0.85rem";
-      logoutLink.onclick = e => {
-        e.preventDefault();
-        localStorage.removeItem("currentUser");
-        window.location.href = "index.html";
-      };
-      profileDiv.appendChild(avatar);
-      profileDiv.appendChild(nameLink);
-      profileDiv.appendChild(logoutLink);
-      localStorage.setItem("showProfileSaved", "true");
-      // Then reload the page:
-      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      alert('Save failed. Please try again.');
     }
+  }
 
     // Ctrl+Enter or Cmd+Enter also saves & exits edit mode
     document.addEventListener("keydown", e => {
@@ -538,162 +399,87 @@ document.getElementById('imageInput').addEventListener('change', function (event
       }
     });
 
-    // ─── Prefill all fields on Page Load ──────────────────────────────────────
-    document.addEventListener("DOMContentLoaded", () => {
-      
-      const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
-      if (!currentUser) {
-        window.location.href = "login.html";
-        return;
-      }
+    let userRef, originalData, lastUploadedURL;
 
-      // 1) Set name + email
-      document.getElementById("name").innerText  = currentUser.fullName;
-      document.getElementById("email").innerText = currentUser.email;
+  document.addEventListener('DOMContentLoaded', async () => {
+    const cu = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (!cu?.id) return window.location.href = 'login.html';
 
-      // 2) Load their full record
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const userRecord = users.find(u => u.email === currentUser.email) || {};
+    // point at /users/{id}
+    userRef = database.ref('users/' + cu.id);
+    const snap = await userRef.once('value');
+    originalData = snap.val() || {};
 
-      // 3) Restore profile image if saved
-      const imgEl = document.getElementById("profileImg");
-      if (userRecord.profileImage) {
-        imgEl.src = userRecord.profileImage;
-      }
-
-      // 4) If there is no other data yet, show default placeholders
-      const hasAnyProfileData = Boolean(
-        userRecord.currentJob  ||
-        userRecord.location    ||
-        userRecord.phoneNumber ||
-        (userRecord.experience  || []).some(x => x) ||
-        (userRecord.education   || {}).university ||
-        (userRecord.softSkills  || []).some(x => x) ||
-        (userRecord.techSkills  || []).some(x => x) ||
-        (userRecord.openTo      || []).some(x => x) ||
-        (userRecord.specialNeeds|| []).some(x => x)
-      );
-
-      if (!hasAnyProfileData) {
-        // No saved profile data → write default prompts
-        document.getElementById("title").innerText    = "Current job";
-        document.getElementById("location").innerText = "Location";
-        document.getElementById("phone").innerText    = "Phone number";
-
-        const expEls = Array.from(
-          document.querySelectorAll(".section.white:nth-of-type(2) ul li.editable")
-        ).slice(0, 4);
-        expEls.forEach((li, i) => li.innerText = `(Experience)`);
-
+    // populate text fields
+    ['fullName','email','currentJob','location','phoneNumber','profileImage']
+      .forEach(key => {
+        const el = document.getElementById(
+          key === 'fullName'   ? 'name' :
+          key === 'currentJob' ? 'title' :
+          key === 'phoneNumber'? 'phone' : key
+        );
+        if (el) el.innerText = originalData[key] || '';
+      });
+      const ed = originalData.education || {};
+      const anyEdu = [ed.university, ed.bachelor, ed.date, ed.gpa, ed.activities]
+                      .some(v => v && v.trim() !== '');
+      if (anyEdu) {
         const eduEl = document.querySelector(".section.white:nth-of-type(2) p.editable");
-        eduEl.innerText =
-          "University: (e.g. State University)\n" +
-          "Bachelor:   (e.g. B.S. in Computer Science)\n" +
-          "Date:       (e.g. 2020–2024)\n" +
-          "GPA:        (e.g. 3.8)\n" +
-          "Activities: (e.g. Chess Club, Volunteer)";
-
-        const softEls = Array.from(
-          document.querySelectorAll(".section.blue ul:first-of-type li.editable")
-        ).slice(0, 4);
-        ["(e.g. Teamwork, Problem Solving)","...","...","..."]
-          .forEach((txt, i) => { if (softEls[i]) softEls[i].innerText = txt; });
-
-        const techEls = Array.from(
-          document.querySelectorAll(".section.blue ul:nth-of-type(2) li.editable")
-        ).slice(0, 4);
-        ["(e.g. C++, SQL)","...","...","..."].forEach((txt, i) => {
-          if (techEls[i]) techEls[i].innerText = txt;
-        });
-
-        // Open To (3 items)
-        const openEls = Array.from(
-          document.querySelectorAll(".section.white:nth-of-type(4) ul li.editable")
-        ).slice(0, 3);
-        ["(e.g. Full-Time, Remote, Internship)","...","..."]
-          .forEach((txt, i) => { if (openEls[i]) openEls[i].innerText = txt; });
-
-        // ── NEW: Special Needs (4 items) ─────────────────────────────────────
-        const specialEls = Array.from(
-          document.querySelectorAll(".section.white:nth-of-type(5) ul li.editable")
-        ).slice(0, 4);
-        ["(e.g. Mobility Assistance)","(e.g. ADHD)","(e.g. Visual Aid)","(e.g. Other)"]
-          .forEach((txt, i) => { if (specialEls[i]) specialEls[i].innerText = txt; });
-        // ─────────────────────────────────────────────────────────────────────────
-      } else {
-        // 5) Prefill all the fields from existing userRecord
-        document.getElementById("title").innerText    = userRecord.currentJob  || "";
-        document.getElementById("location").innerText = userRecord.location    || "";
-        document.getElementById("phone").innerText    = userRecord.phoneNumber || "";
-
-        const expEls = Array.from(
-          document.querySelectorAll(".section.white:nth-of-type(2) ul li.editable")
-        ).slice(0, 4);
-        (userRecord.experience || ["", "", "", ""]).forEach((txt, i) => {
-          if (expEls[i]) expEls[i].innerText = txt;
-        });
-
-        const eduEl = document.querySelector(".section.white:nth-of-type(2) p.editable");
-        const ed = userRecord.education || {};
-        if (eduEl) {
-          eduEl.innerText =
-            "University: " + (ed.university || "") + "\n" +
-            "Bachelor:   " + (ed.bachelor   || "") + "\n" +
-            "Date:       " + (ed.date       || "") + "\n" +
-            "GPA:        " + (ed.gpa        || "") + "\n" +
-            "Activities: " + (ed.activities || "");
-        }
-
-        const softEls = Array.from(
-          document.querySelectorAll(".section.blue ul:first-of-type li.editable")
-        ).slice(0, 4);
-        (userRecord.softSkills || ["", "", "", ""]).forEach((txt, i) => {
-          if (softEls[i]) softEls[i].innerText = txt;
-        });
-
-        const techEls = Array.from(
-          document.querySelectorAll(".section.blue ul:nth-of-type(2) li.editable")
-        ).slice(0, 4);
-        (userRecord.techSkills || ["", "", "", ""]).forEach((txt, i) => {
-          if (techEls[i]) techEls[i].innerText = txt;
-        });
-
-        // Open To (3 items)
-        const openEls = Array.from(
-          document.querySelectorAll(".section.white:nth-of-type(4) ul li.editable")
-        ).slice(0, 3);
-        (userRecord.openTo || ["", "", ""]).forEach((txt, i) => {
-          if (openEls[i]) openEls[i].innerText = txt;
-        });
-
-        // ── Prefill Special Needs (4 items) ────────────────────────────────────
-        const specialEls = Array.from(
-          document.querySelectorAll(".section.white:nth-of-type(5) ul li.editable")
-        ).slice(0, 4);
-        (userRecord.specialNeeds || ["", "", "", ""]).forEach((txt, i) => {
-          if (specialEls[i]) specialEls[i].innerText = txt;
-        });
-        // ─────────────────────────────────────────────────────────────────────────
+        eduEl.innerHTML =
+          `University: ${ed.university || ''}<br>` +
+          `Bachelor:   ${ed.bachelor   || ''}<br>` +
+          `Date:       ${ed.date       || ''}<br>` +
+          `GPA:        ${ed.gpa        || ''}<br>` +
+          `Activities: ${ed.activities || ''}`;
       }
-      if (localStorage.getItem("showProfileSaved") === "true") {
-        const banner = document.createElement("div");
-        banner.innerText = "Profile saved!";
-        banner.style.position = "fixed";
-        banner.style.top = "1rem";
-        banner.style.left = "50%";
-        banner.style.transform = "translateX(-50%)";
-        banner.style.background = "#62aaff";
-        banner.style.color = "#fff";
-        banner.style.padding = "0.75rem 1.5rem";
-        banner.style.borderRadius = "6px";
-        banner.style.zIndex = "3000";
-        document.body.appendChild(banner);
-        setTimeout(() => banner.remove(), 2000);
 
-        // Clear the flag so it doesn’t show again
-        localStorage.removeItem("showProfileSaved");
-      }
+    document.getElementById('profileImg').src =
+  originalData.profileImage || 'assets/Default_profile.png';
+
+    // arrays: experience, softSkills, techSkills, openTo, specialNeeds
+    const mappings = [
+      ['experience', ".section.white:nth-of-type(2) ul li.editable"],
+      ['softSkills',  ".section.blue ul:first-of-type li.editable"],
+      ['techSkills',  ".section.blue ul:nth-of-type(2) li.editable"],
+      ['openTo',      ".section.white:nth-of-type(4) ul li.editable"],
+      ['specialNeeds',".section.white:nth-of-type(5) ul li.editable"]
+    ];
+    mappings.forEach(([key, sel]) => {
+      (originalData[key]||[]).forEach((txt,i) => {
+        const els = document.querySelectorAll(sel);
+        if (els[i]) els[i].innerText = txt;
+      });
     });
+
+    // image‐upload picker
+      // ─── Data-URL image uploader ─────────────────────────────────
+  const input = document.getElementById('imageInput');
+  const img   = document.getElementById('profileImg');
+
+  input.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file || !file.type.startsWith('image/')) {
+      return alert('Please pick an image file.');
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const dataURL = reader.result;   // base64 string
+      img.src       = dataURL;         // preview immediately
+
+      // save that string into your RTDB:
+      userRef.update({ profileImage: dataURL })
+        .then(() => console.log('✔ profileImage saved as Data-URL'))
+        .catch(err => {
+          console.error('DB write failed:', err);
+          alert('Could not save image. See console.');
+        });
+    };
+    reader.readAsDataURL(file);
+  });
+  // ───────────────────────────────────────────────────────────────
+
+  });
     // ─── END Profile persistence logic ────────────────────────────────────────
   </script>
 
